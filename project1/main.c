@@ -30,9 +30,9 @@ void *start_routine(void *arg)
     
     printf("thread: %s\n", str);
     printf("The value of thread_i in %s: %d (address: %p)\n", str, thread_i, &thread_i);
-    printf("The address of char *str in %s: %p\n", str, &str);
-    printf("The address of char *heap_str in %s: %p\n", heap_str, &heap_str);
-    printf("The address of global variable char *global_str: %p\n", &global_str);
+    printf("The address of char *str in %s [stack]: %p\n", str, &str);
+    printf("The value of char *heap_str in %s [heap]: %p\n", heap_str, heap_str);
+    // printf("The address of global variable char *global_str: %p\n", &global_str);
 
     printf("\n");
     sleep(1);
@@ -51,11 +51,16 @@ int main()
     pthread_create(&t1, NULL, start_routine, (void *) arg1);
     pthread_create(&t2, NULL, start_routine, (void *) arg2);
 
-
+    // dynamically allocated variable(s) in main
+    char *heap_str = (char *) malloc(sizeof(char) * 100);
+    // local variables in main()
     char *str = "main";
+    strncpy(heap_str, str, 5);
+
     printf("thread: main\n");
     printf("The value of thread_i in %s: %d (address: %p)\n", str, thread_i, &thread_i);
-    printf("The address of char *str in %s: %p\n", str, &str);
+    printf("The address of char *str in %s [stack]: %p\n", str, &str);
+    printf("The value of char *heap_str in %s [heap]: %p\n", heap_str, heap_str);
     printf("\n");
     sleep(1);
 
@@ -65,5 +70,6 @@ int main()
 
     pthread_join(t1, NULL);
     pthread_join(t2, NULL);
+    free(heap_str);
     return 0;
 }
