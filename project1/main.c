@@ -6,6 +6,7 @@
 
 __thread int thread_i;
 char *global_str = "Global variable char *";
+char *BSS_str;
 void *global_ptr;
 
 void check_stack(char *str)
@@ -77,6 +78,7 @@ int main()
     printf("The address of char *str in %s    [stack]: %p\n", str, &str); // str is a local variable
     printf("The value of char *heap_str in %s [heap]: %p\n", heap_str, heap_str); // heap_str is a local variable; it's the area it points to allocated in heap
     printf("The address of global variable char *global_str: %p\n", &global_str);
+    printf("The address of uninitialized variable char *BSS_str: %p\n", &BSS_str);
     printf("\n");
 
     char *s;
