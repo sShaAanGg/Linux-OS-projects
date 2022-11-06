@@ -16,6 +16,22 @@ void check_stack(char *str)
     return;
 }
 
+// void check_heap(int t)
+// {
+//     char *heap_str = (char *) malloc(sizeof(char) * 100);
+//     if (t == 1) {
+//         char *str = "t1";
+//         strncpy(heap_str, str, 3);
+//     } else {
+//         char *str = "t2";
+//         strncpy(heap_str, str, 3);
+//     }
+//     printf("The value of char *heap_str in %s    [heap|shared_memory]: %p\n", heap_str, heap_str);
+
+//     free(heap_str);
+//     return;
+// }
+
 void *start_routine(void *arg)
 {
     char *heap_str = (char *) malloc(sizeof(char) * 100);
@@ -41,6 +57,7 @@ void *start_routine(void *arg)
     printf("The value of thread_i in %s: %d (address: %p)\n", str, thread_i, &thread_i);
     printf("The address of char *str in %s       [stack]: %p\n", str, &str);
     check_stack(str);
+    // check_heap(thread_i);
     printf("The value of char *heap_str in %s    [heap|shared_memory]: %p\n", heap_str, heap_str);
     printf("The address of global variable char *global_str: %p\n", &global_str);
 
