@@ -3,11 +3,19 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <linux/kernel.h>
+#include <sys/syscall.h>
+#define __NR_get_task_mm 334
 
 __thread int thread_i;
 char *global_str = "Global variable char *";
 char *BSS_str;
-void *global_ptr;
+// void *global_ptr;
+
+long get_task_mm_syscall(void)
+{
+    return syscall(__NR_get_task_mm);
+}
 
 void check_stack(char *str)
 {
@@ -44,13 +52,13 @@ void *start_routine(void *arg)
         str = "t1";
         strncpy(heap_str, str, 3);
         // heap_str = "t1";
-        global_ptr = heap_str; // assign the value (the address in heap segment to the globla pointer)
+        // global_ptr = heap_str; // assign the value (the address in heap segment to the globla pointer)
     }
     else {
         str = "t2";
         strncpy(heap_str, str, 3);
         // heap_str = "t2";
-        strncpy((char *) global_ptr, heap_str, 3);
+        // strncpy((char *) global_ptr, heap_str, 3);
     }
     
     printf("thread: %s\n", str);
@@ -98,6 +106,11 @@ int main()
     printf("The address of uninitialized variable char *BSS_str: %p\n", &BSS_str);
     printf("\n");
 
+
+    long l;
+    l = get_task_mm_syscall();
+    printf("system call return %ld\n", l);
+    
     char *s;
     scanf("%s", s); // For gdb analyzing purpose
 
