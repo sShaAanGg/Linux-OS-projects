@@ -81,6 +81,139 @@ system call return 0
 
 [ 1660.986942] env_start of mm_struct is 7fffffffde5d
 [ 1660.986943] env_end of mm_struct is 7fffffffefc7
+
+[ 1660.986943] vm_start of vm_area_struct is 400000
+[ 1660.986944] vm_end of vm_area_struct is 402000
+[ 1660.986944] the size of the vm_area (vm_end - vm_start) is 2000
+
+[ 1660.986944] vm_start of vm_area_struct is 601000
+[ 1660.986945] vm_end of vm_area_struct is 602000
+[ 1660.986945] the size of the vm_area (vm_end - vm_start) is 1000
+
+[ 1660.986946] vm_start of vm_area_struct is 602000
+[ 1660.986946] vm_end of vm_area_struct is 603000
+[ 1660.986946] the size of the vm_area (vm_end - vm_start) is 1000
+
+[ 1660.986947] vm_start of vm_area_struct is 603000
+[ 1660.986947] vm_end of vm_area_struct is 624000
+[ 1660.986948] the size of the vm_area (vm_end - vm_start) is 21000
+
+[ 1660.986948] vm_start of vm_area_struct is 7fffe8000000
+[ 1660.986948] vm_end of vm_area_struct is 7fffe8021000
+[ 1660.986949] the size of the vm_area (vm_end - vm_start) is 21000
+
+[ 1660.986949] vm_start of vm_area_struct is 7fffe8021000
+[ 1660.986950] vm_end of vm_area_struct is 7fffec000000
+[ 1660.986950] the size of the vm_area (vm_end - vm_start) is 3fdf000
+
+[ 1660.986951] vm_start of vm_area_struct is 7ffff0000000
+[ 1660.986951] vm_end of vm_area_struct is 7ffff0021000
+[ 1660.986951] the size of the vm_area (vm_end - vm_start) is 21000
+
+[ 1660.986952] vm_start of vm_area_struct is 7ffff0021000
+[ 1660.986952] vm_end of vm_area_struct is 7ffff4000000
+[ 1660.986953] the size of the vm_area (vm_end - vm_start) is 3fdf000
+
+[ 1660.986953] vm_start of vm_area_struct is 7ffff65d8000
+[ 1660.986953] vm_end of vm_area_struct is 7ffff65ee000
+[ 1660.986954] the size of the vm_area (vm_end - vm_start) is 16000
+
+[ 1660.986954] vm_start of vm_area_struct is 7ffff65ee000
+[ 1660.986955] vm_end of vm_area_struct is 7ffff67ed000
+[ 1660.986955] the size of the vm_area (vm_end - vm_start) is 1ff000
+
+[ 1660.986955] vm_start of vm_area_struct is 7ffff67ed000
+[ 1660.986956] vm_end of vm_area_struct is 7ffff67ee000
+[ 1660.986956] the size of the vm_area (vm_end - vm_start) is 1000
+
+[ 1660.986957] vm_start of vm_area_struct is 7ffff67ee000
+[ 1660.986957] vm_end of vm_area_struct is 7ffff67ef000
+[ 1660.986958] the size of the vm_area (vm_end - vm_start) is 1000
+
+[ 1660.986958] vm_start of vm_area_struct is 7ffff67ef000
+[ 1660.986958] vm_end of vm_area_struct is 7ffff6fef000
+[ 1660.986959] the size of the vm_area (vm_end - vm_start) is 800000
+
+[ 1660.986959] vm_start of vm_area_struct is 7ffff6fef000
+[ 1660.986959] vm_end of vm_area_struct is 7ffff6ff0000
+[ 1660.986960] the size of the vm_area (vm_end - vm_start) is 1000
+
+[ 1660.986960] vm_start of vm_area_struct is 7ffff6ff0000
+[ 1660.986961] vm_end of vm_area_struct is 7ffff77f0000
+[ 1660.986961] the size of the vm_area (vm_end - vm_start) is 800000
+
+[ 1660.986962] vm_start of vm_area_struct is 7ffff77f0000
+[ 1660.986962] vm_end of vm_area_struct is 7ffff79b0000
+[ 1660.986963] the size of the vm_area (vm_end - vm_start) is 1c0000
+
+[ 1660.986963] vm_start of vm_area_struct is 7ffff79b0000
+[ 1660.986963] vm_end of vm_area_struct is 7ffff7bb0000
+[ 1660.986964] the size of the vm_area (vm_end - vm_start) is 200000
+
+[ 1660.986964] vm_start of vm_area_struct is 7ffff7bb0000
+[ 1660.986965] vm_end of vm_area_struct is 7ffff7bb4000
+[ 1660.986965] the size of the vm_area (vm_end - vm_start) is 4000
+
+[ 1660.986966] vm_start of vm_area_struct is 7ffff7bb4000
+[ 1660.986966] vm_end of vm_area_struct is 7ffff7bb6000
+[ 1660.986966] the size of the vm_area (vm_end - vm_start) is 2000
+
+[ 1660.986967] vm_start of vm_area_struct is 7ffff7bb6000
+[ 1660.986967] vm_end of vm_area_struct is 7ffff7bba000
+[ 1660.986968] the size of the vm_area (vm_end - vm_start) is 4000
+
+[ 1660.986968] vm_start of vm_area_struct is 7ffff7bba000
+[ 1660.986968] vm_end of vm_area_struct is 7ffff7bd2000
+[ 1660.986969] the size of the vm_area (vm_end - vm_start) is 18000
+
+[ 1660.986969] vm_start of vm_area_struct is 7ffff7bd2000
+[ 1660.986970] vm_end of vm_area_struct is 7ffff7dd1000
+[ 1660.986970] the size of the vm_area (vm_end - vm_start) is 1ff000
+
+[ 1660.986970] vm_start of vm_area_struct is 7ffff7dd1000
+[ 1660.986971] vm_end of vm_area_struct is 7ffff7dd2000
+[ 1660.986971] the size of the vm_area (vm_end - vm_start) is 1000
+
+[ 1660.986972] vm_start of vm_area_struct is 7ffff7dd2000
+[ 1660.986972] vm_end of vm_area_struct is 7ffff7dd3000
+[ 1660.986972] the size of the vm_area (vm_end - vm_start) is 1000
+
+[ 1660.986973] vm_start of vm_area_struct is 7ffff7dd3000
+[ 1660.986973] vm_end of vm_area_struct is 7ffff7dd7000
+[ 1660.986974] the size of the vm_area (vm_end - vm_start) is 4000
+
+[ 1660.986974] vm_start of vm_area_struct is 7ffff7dd7000
+[ 1660.986974] vm_end of vm_area_struct is 7ffff7dfd000
+[ 1660.986975] the size of the vm_area (vm_end - vm_start) is 26000
+
+[ 1660.986975] vm_start of vm_area_struct is 7ffff7fd8000
+[ 1660.986976] vm_end of vm_area_struct is 7ffff7fdc000
+[ 1660.986976] the size of the vm_area (vm_end - vm_start) is 4000
+
+[ 1660.986977] vm_start of vm_area_struct is 7ffff7ff7000
+[ 1660.986977] vm_end of vm_area_struct is 7ffff7ffa000
+[ 1660.986977] the size of the vm_area (vm_end - vm_start) is 3000
+
+[ 1660.986978] vm_start of vm_area_struct is 7ffff7ffa000
+[ 1660.986978] vm_end of vm_area_struct is 7ffff7ffc000
+[ 1660.986979] the size of the vm_area (vm_end - vm_start) is 2000
+
+[ 1660.986979] vm_start of vm_area_struct is 7ffff7ffc000
+[ 1660.986979] vm_end of vm_area_struct is 7ffff7ffd000
+[ 1660.986980] the size of the vm_area (vm_end - vm_start) is 1000
+
+[ 1660.986980] vm_start of vm_area_struct is 7ffff7ffd000
+[ 1660.986981] vm_end of vm_area_struct is 7ffff7ffe000
+[ 1660.986981] the size of the vm_area (vm_end - vm_start) is 1000
+
+[ 1660.986981] vm_start of vm_area_struct is 7ffff7ffe000
+[ 1660.986982] vm_end of vm_area_struct is 7ffff7fff000
+[ 1660.986982] the size of the vm_area (vm_end - vm_start) is 1000
+
+[ 1660.986983] vm_start of vm_area_struct is 7ffffffdd000
+[ 1660.986983] vm_end of vm_area_struct is 7ffffffff000
+
+[ 1660.986983] the size of the vm_area (vm_end - vm_start) is 22000
 ```
 
 ---
