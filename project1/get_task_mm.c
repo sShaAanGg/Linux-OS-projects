@@ -27,28 +27,15 @@ asmlinkage long sys_get_task_mm(void)
     cur_mm = mm;
     cur_mmap = cur_mm->mmap;
 
-    // unsigned long code_segment_size;
-    // unsigned long data_segment_size;
-    // unsigned long BSS_segment_size;
-    // unsigned long heap_segment_size;
-
     printk("start_code of mm_struct is %lx\n", cur_mm->start_code);
     printk("end_code of mm_struct is %lx\n", cur_mm->end_code);
-    // code_segment_size = cur_mm->end_code - cur_mm->start_code;
-    // printk("size of text segment is : %lx\n\n", code_segment_size);
-
+    
     printk("start_data of mm_struct is %lx\n", cur_mm->start_data);
     printk("end_data of mm_struct is %lx\n", cur_mm->end_data);
-    // data_segment_size = cur_mm->end_data - cur_mm->start_data;
-    // printk("size of data segment is : %lx\n\n", data_segment_size);
-    // BSS_segment_size = cur_mm->start_brk - cur_mm->end_data;
-    // printk("size of BSS segment is : %lx\n\n", BSS_segment_size);
-
+    
     printk("start_brk of mm_struct is %lx\n", cur_mm->start_brk);
     printk("brk of mm_struct is %lx\n\n", cur_mm->brk);
-    // heap_segment_size = cur_mm->brk - cur_mm->start_brk;
-    // printk("size of heap segment is : %lx\n\n", heap_segment_size);
-
+    
     printk("mmap_base of mm_struct is %lx\n\n", cur_mm->mmap_base);
     
     printk("start_stack of mm_struct is %lx\n", cur_mm->start_stack);

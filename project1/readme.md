@@ -5,7 +5,6 @@ Distribution: Ubuntu 16.04.7
 gcc: 5.4.0 
 gdb: 8.3
 ### Kernel Space Code (New System Call)
-[Link to Source Code](https://github.com/sShaAanGg/Linux-OS-projects/blob/main/project1/get_task_mm.c)
 #### References:
 > [get_pid和get_task_mm](https://zhuanlan.zhihu.com/p/41788388)  
 > [__task_pid_nr_ns和find_get_pid](https://zhuanlan.zhihu.com/p/41260133)
@@ -23,7 +22,8 @@ gdb: 8.3
 > [img src2](https://stackoverflow.com/questions/63497757/why-does-the-vm-area-struct-have-start-code-end-code-field)
 ![img link](https://i.stack.imgur.com/0kIuB.jpg)
 
-此系統呼叫能透過 pid 得到 current process 的 task_struct，再透過 task_struct 得到其成員 mm_struct，藉此存取 mm_struct 的成員 start_code,end_code, ...
+此系統呼叫能透過 pid 得到 current process 的 task_struct，再透過 task_struct 得到其成員 mm_struct，藉此存取 mm_struct 的成員 **mmap (a list of vm_area_struct)**, start_code,end_code, start_data, end_data ...
+[Link to Source Code](https://github.com/sShaAanGg/Linux-OS-projects/blob/main/project1/get_task_mm.c)
 
 #### 新增 system call 與編譯核心過程
 > [Adding A System Call To The Linux Kernel](https://dev.to/jasper/adding-a-system-call-to-the-linux-kernel-5-8-1-in-ubuntu-20-04-lts-2ga8)
@@ -32,7 +32,7 @@ gdb: 8.3
 
 編譯時須加上 -lpthread 選項
 ```gcc main.c -lpthread -o main```
-### Ouput
+### Ouput of `./main`
 在當前目錄下輸入 `./main`
 會得到以下輸出 (執行緒間輸出的順序不固定)
 ```
@@ -62,6 +62,7 @@ system call return 0
 * 可以發現全域變數 `__thread int thread_i` 在**不同執行緒裡都有一份 (位址不同且值也不同，為不同的變數)**
 
 符合 [Thread-Local Storage](https://web.mit.edu/rhel-doc/3/rhel-gcc-en-3/thread-local.html) 裡面對 thread-local variable 的說明
+### Output of `dmesg`
 此時再輸入 `dmesg` 會得到以下輸出
 ```
 [ 1660.986937] start_code of mm_struct is 400000
