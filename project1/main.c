@@ -10,7 +10,6 @@
 __thread int thread_i;
 char *global_str = "Global variable char *";
 char *BSS_str;
-// void *global_ptr;
 
 long get_task_mm_syscall(void)
 {
@@ -24,51 +23,30 @@ void check_stack(char *str)
     return;
 }
 
-// void check_heap(int t)
-// {
-//     char *heap_str = (char *) malloc(sizeof(char) * 100);
-//     if (t == 1) {
-//         char *str = "t1";
-//         strncpy(heap_str, str, 3);
-//     } else {
-//         char *str = "t2";
-//         strncpy(heap_str, str, 3);
-//     }
-//     printf("The value of char *heap_str in %s    [heap|shared_memory]: %p\n", heap_str, heap_str);
-
-//     free(heap_str);
-//     return;
-// }
-
 void *start_routine(void *arg)
 {
     char *heap_str = (char *) malloc(sizeof(char) * 100);
     char *str;
     thread_i = *(int *) arg;
-    // printf("The address of char *heap_str in %s: %p\n", "start_routine", &heap_str);
-    // printf("%i\n", *(int *) arg);
-    
+        
     if (thread_i == 1) {
         str = "t1";
         strncpy(heap_str, str, 3);
         // heap_str = "t1";
-        // global_ptr = heap_str; // assign the value (the address in heap segment to the globla pointer)
     }
     else {
         str = "t2";
         strncpy(heap_str, str, 3);
         // heap_str = "t2";
-        // strncpy((char *) global_ptr, heap_str, 3);
     }
     
     printf("thread: %s\n", str);
     printf("The value of thread_i in %s: %d (address: %p)\n", str, thread_i, &thread_i);
     printf("The address of char *str in %s       [stack]: %p\n", str, &str);
     check_stack(str);
-    // check_heap(thread_i);
+    
     printf("The value of char *heap_str in %s    [heap|shared_memory]: %p\n", heap_str, heap_str);
     printf("The address of global variable char *global_str: %p\n", &global_str);
-
     printf("\n");
     sleep(1);
 
@@ -87,10 +65,8 @@ int main()
     arg1 = &i1, arg2 = &i2;
     pthread_create(&t1, NULL, start_routine, (void *) arg1);
     sleep(1);
-    // printf("The value of void *global_ptr: %p\n", global_ptr);
     pthread_create(&t2, NULL, start_routine, (void *) arg2);
     sleep(1);
-    // printf("The string pointed by void *global_ptr: %s\n", (char *) global_ptr);
 
     // dynamically allocated variable(s) in main
     char *heap_str = (char *) malloc(sizeof(char) * 100);
@@ -105,7 +81,6 @@ int main()
     printf("The address of global variable char *global_str: %p\n", &global_str);
     printf("The address of uninitialized variable char *BSS_str: %p\n", &BSS_str);
     printf("\n");
-
 
     long l;
     l = get_task_mm_syscall();
