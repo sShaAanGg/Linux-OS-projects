@@ -48,17 +48,13 @@ asmlinkage long sys_get_task_mm(void)
     unsigned long vm_area_size;
     while (cur_mmap->vm_next != NULL) // iterate through the list of VMAs
     {
-        /* code */
-        printk("vm_start of vm_area_struct is %lx\n", cur_mmap->vm_start);
-        printk("vm_end of vm_area_struct is %lx\n", cur_mmap->vm_end);
         vm_area_size = cur_mmap->vm_end - cur_mmap->vm_start;
-        printk("the size of the vm_area (vm_end - vm_start) is %lx\n\n", vm_area_size);
+        printk("vm_start: %lx    vm_end: %lx    size: %lx\n", cur_mmap->vm_start, cur_mmap->vm_end, vm_area_size);
         cur_mmap = cur_mmap->vm_next;
     }
-    printk("vm_start of vm_area_struct is %lx\n", cur_mmap->vm_start);
-    printk("vm_end of vm_area_struct is %lx\n\n", cur_mmap->vm_end);
     vm_area_size = cur_mmap->vm_end - cur_mmap->vm_start;
-    printk("the size of the vm_area (vm_end - vm_start) is %lx\n\n", vm_area_size);
+    printk("vm_start: %lx    vm_end: %lx    size: %lx\n", cur_mmap->vm_start, cur_mmap->vm_end, vm_area_size);
 
+    atomic_dec_and_test(&mm->mm_users);
     return 0;
 }

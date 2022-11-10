@@ -22,7 +22,7 @@ gdb: 8.3
 > [img src2](https://stackoverflow.com/questions/63497757/why-does-the-vm-area-struct-have-start-code-end-code-field)
 ![img link](https://i.stack.imgur.com/0kIuB.jpg)
 
-此系統呼叫能透過 pid 得到 current process 的 task_struct，再透過 task_struct 得到其成員 mm_struct，藉此存取 mm_struct 的成員 **mmap (a list of vm_area_struct)**, start_code,end_code, start_data, end_data ...
+此系統呼叫能透過 pid 得到 current process 的 task_struct，再透過 task_struct 得到其成員 mm_struct，藉此存取 mm_struct 的成員 **mmap (a list of vm_area_struct)**, start_code, end_code, start_data, end_data ...
 [Link to Source Code](https://github.com/sShaAanGg/Linux-OS-projects/blob/main/project1/get_task_mm.c)
 
 #### 新增 system call 與編譯核心過程
@@ -52,7 +52,7 @@ The address of global variable char *global_str: 0x602098
 
 thread: main
 The value of thread_i in main: 0 (address: 0x7ffff7fd96fc)
-The address of char *str in main    [stack]: 0x7fffffffd8a8
+The address of char *str in main    [stack]: 0x7fffffffd848
 The value of char *heap_str in main [heap]: 0x603270
 The address of global variable char *global_str: 0x602098
 The address of uninitialized variable char *BSS_str: 0x6020a8
@@ -65,156 +65,55 @@ system call return 0
 ### Output of `dmesg`
 此時再輸入 `dmesg` 會得到以下輸出
 ```
-[ 1660.986937] start_code of mm_struct is 400000
-[ 1660.986938] end_code of mm_struct is 40119c
+[  235.213826] start_code of mm_struct is 400000
+[  235.213827] end_code of mm_struct is 40119c
+[  235.214197] start_data of mm_struct is 601e00
+[  235.214200] end_data of mm_struct is 6020a0
+[  235.214200] start_brk of mm_struct is 603000
+[  235.214201] brk of mm_struct is 624000
 
-[ 1660.986938] start_data of mm_struct is 601e00
-[ 1660.986939] end_data of mm_struct is 6020a0
+[  235.214201] mmap_base of mm_struct is 7ffff7fff000
 
-[ 1660.986940] start_brk of mm_struct is 603000
-[ 1660.986940] brk of mm_struct is 624000
+[  235.214201] start_stack of mm_struct is 7fffffffd960
+[  235.214202] arg_start of mm_struct is 7fffffffddc6
+[  235.214202] arg_end of mm_struct is 7fffffffddf7
 
-[ 1660.986941] mmap_base of mm_struct is 7ffff7fff000
+[  235.214203] env_start of mm_struct is 7fffffffddf7
+[  235.214203] env_end of mm_struct is 7fffffffefc7
 
-[ 1660.986941] start_stack of mm_struct is 7fffffffd9c0
-[ 1660.986942] arg_start of mm_struct is 7fffffffde2c
-[ 1660.986942] arg_end of mm_struct is 7fffffffde5d
-
-[ 1660.986942] env_start of mm_struct is 7fffffffde5d
-[ 1660.986943] env_end of mm_struct is 7fffffffefc7
-
-[ 1660.986943] vm_start of vm_area_struct is 400000
-[ 1660.986944] vm_end of vm_area_struct is 402000
-[ 1660.986944] the size of the vm_area (vm_end - vm_start) is 2000
-
-[ 1660.986944] vm_start of vm_area_struct is 601000
-[ 1660.986945] vm_end of vm_area_struct is 602000
-[ 1660.986945] the size of the vm_area (vm_end - vm_start) is 1000
-
-[ 1660.986946] vm_start of vm_area_struct is 602000
-[ 1660.986946] vm_end of vm_area_struct is 603000
-[ 1660.986946] the size of the vm_area (vm_end - vm_start) is 1000
-
-[ 1660.986947] vm_start of vm_area_struct is 603000
-[ 1660.986947] vm_end of vm_area_struct is 624000
-[ 1660.986948] the size of the vm_area (vm_end - vm_start) is 21000
-
-[ 1660.986948] vm_start of vm_area_struct is 7fffe8000000
-[ 1660.986948] vm_end of vm_area_struct is 7fffe8021000
-[ 1660.986949] the size of the vm_area (vm_end - vm_start) is 21000
-
-[ 1660.986949] vm_start of vm_area_struct is 7fffe8021000
-[ 1660.986950] vm_end of vm_area_struct is 7fffec000000
-[ 1660.986950] the size of the vm_area (vm_end - vm_start) is 3fdf000
-
-[ 1660.986951] vm_start of vm_area_struct is 7ffff0000000
-[ 1660.986951] vm_end of vm_area_struct is 7ffff0021000
-[ 1660.986951] the size of the vm_area (vm_end - vm_start) is 21000
-
-[ 1660.986952] vm_start of vm_area_struct is 7ffff0021000
-[ 1660.986952] vm_end of vm_area_struct is 7ffff4000000
-[ 1660.986953] the size of the vm_area (vm_end - vm_start) is 3fdf000
-
-[ 1660.986953] vm_start of vm_area_struct is 7ffff65d8000
-[ 1660.986953] vm_end of vm_area_struct is 7ffff65ee000
-[ 1660.986954] the size of the vm_area (vm_end - vm_start) is 16000
-
-[ 1660.986954] vm_start of vm_area_struct is 7ffff65ee000
-[ 1660.986955] vm_end of vm_area_struct is 7ffff67ed000
-[ 1660.986955] the size of the vm_area (vm_end - vm_start) is 1ff000
-
-[ 1660.986955] vm_start of vm_area_struct is 7ffff67ed000
-[ 1660.986956] vm_end of vm_area_struct is 7ffff67ee000
-[ 1660.986956] the size of the vm_area (vm_end - vm_start) is 1000
-
-[ 1660.986957] vm_start of vm_area_struct is 7ffff67ee000
-[ 1660.986957] vm_end of vm_area_struct is 7ffff67ef000
-[ 1660.986958] the size of the vm_area (vm_end - vm_start) is 1000
-
-[ 1660.986958] vm_start of vm_area_struct is 7ffff67ef000
-[ 1660.986958] vm_end of vm_area_struct is 7ffff6fef000
-[ 1660.986959] the size of the vm_area (vm_end - vm_start) is 800000
-
-[ 1660.986959] vm_start of vm_area_struct is 7ffff6fef000
-[ 1660.986959] vm_end of vm_area_struct is 7ffff6ff0000
-[ 1660.986960] the size of the vm_area (vm_end - vm_start) is 1000
-
-[ 1660.986960] vm_start of vm_area_struct is 7ffff6ff0000
-[ 1660.986961] vm_end of vm_area_struct is 7ffff77f0000
-[ 1660.986961] the size of the vm_area (vm_end - vm_start) is 800000
-
-[ 1660.986962] vm_start of vm_area_struct is 7ffff77f0000
-[ 1660.986962] vm_end of vm_area_struct is 7ffff79b0000
-[ 1660.986963] the size of the vm_area (vm_end - vm_start) is 1c0000
-
-[ 1660.986963] vm_start of vm_area_struct is 7ffff79b0000
-[ 1660.986963] vm_end of vm_area_struct is 7ffff7bb0000
-[ 1660.986964] the size of the vm_area (vm_end - vm_start) is 200000
-
-[ 1660.986964] vm_start of vm_area_struct is 7ffff7bb0000
-[ 1660.986965] vm_end of vm_area_struct is 7ffff7bb4000
-[ 1660.986965] the size of the vm_area (vm_end - vm_start) is 4000
-
-[ 1660.986966] vm_start of vm_area_struct is 7ffff7bb4000
-[ 1660.986966] vm_end of vm_area_struct is 7ffff7bb6000
-[ 1660.986966] the size of the vm_area (vm_end - vm_start) is 2000
-
-[ 1660.986967] vm_start of vm_area_struct is 7ffff7bb6000
-[ 1660.986967] vm_end of vm_area_struct is 7ffff7bba000
-[ 1660.986968] the size of the vm_area (vm_end - vm_start) is 4000
-
-[ 1660.986968] vm_start of vm_area_struct is 7ffff7bba000
-[ 1660.986968] vm_end of vm_area_struct is 7ffff7bd2000
-[ 1660.986969] the size of the vm_area (vm_end - vm_start) is 18000
-
-[ 1660.986969] vm_start of vm_area_struct is 7ffff7bd2000
-[ 1660.986970] vm_end of vm_area_struct is 7ffff7dd1000
-[ 1660.986970] the size of the vm_area (vm_end - vm_start) is 1ff000
-
-[ 1660.986970] vm_start of vm_area_struct is 7ffff7dd1000
-[ 1660.986971] vm_end of vm_area_struct is 7ffff7dd2000
-[ 1660.986971] the size of the vm_area (vm_end - vm_start) is 1000
-
-[ 1660.986972] vm_start of vm_area_struct is 7ffff7dd2000
-[ 1660.986972] vm_end of vm_area_struct is 7ffff7dd3000
-[ 1660.986972] the size of the vm_area (vm_end - vm_start) is 1000
-
-[ 1660.986973] vm_start of vm_area_struct is 7ffff7dd3000
-[ 1660.986973] vm_end of vm_area_struct is 7ffff7dd7000
-[ 1660.986974] the size of the vm_area (vm_end - vm_start) is 4000
-
-[ 1660.986974] vm_start of vm_area_struct is 7ffff7dd7000
-[ 1660.986974] vm_end of vm_area_struct is 7ffff7dfd000
-[ 1660.986975] the size of the vm_area (vm_end - vm_start) is 26000
-
-[ 1660.986975] vm_start of vm_area_struct is 7ffff7fd8000
-[ 1660.986976] vm_end of vm_area_struct is 7ffff7fdc000
-[ 1660.986976] the size of the vm_area (vm_end - vm_start) is 4000
-
-[ 1660.986977] vm_start of vm_area_struct is 7ffff7ff7000
-[ 1660.986977] vm_end of vm_area_struct is 7ffff7ffa000
-[ 1660.986977] the size of the vm_area (vm_end - vm_start) is 3000
-
-[ 1660.986978] vm_start of vm_area_struct is 7ffff7ffa000
-[ 1660.986978] vm_end of vm_area_struct is 7ffff7ffc000
-[ 1660.986979] the size of the vm_area (vm_end - vm_start) is 2000
-
-[ 1660.986979] vm_start of vm_area_struct is 7ffff7ffc000
-[ 1660.986979] vm_end of vm_area_struct is 7ffff7ffd000
-[ 1660.986980] the size of the vm_area (vm_end - vm_start) is 1000
-
-[ 1660.986980] vm_start of vm_area_struct is 7ffff7ffd000
-[ 1660.986981] vm_end of vm_area_struct is 7ffff7ffe000
-[ 1660.986981] the size of the vm_area (vm_end - vm_start) is 1000
-
-[ 1660.986981] vm_start of vm_area_struct is 7ffff7ffe000
-[ 1660.986982] vm_end of vm_area_struct is 7ffff7fff000
-[ 1660.986982] the size of the vm_area (vm_end - vm_start) is 1000
-
-[ 1660.986983] vm_start of vm_area_struct is 7ffffffdd000
-[ 1660.986983] vm_end of vm_area_struct is 7ffffffff000
-
-[ 1660.986983] the size of the vm_area (vm_end - vm_start) is 22000
+[  235.214204] vm_start: 400000    vm_end: 402000    size: 2000
+[  235.214204] vm_start: 601000    vm_end: 602000    size: 1000
+[  235.214205] vm_start: 602000    vm_end: 603000    size: 1000
+[  235.214206] vm_start: 603000    vm_end: 624000    size: 21000
+[  235.214206] vm_start: 7fffe8000000    vm_end: 7fffe8021000    size: 21000
+[  235.214207] vm_start: 7fffe8021000    vm_end: 7fffec000000    size: 3fdf000
+[  235.214208] vm_start: 7ffff0000000    vm_end: 7ffff0021000    size: 21000
+[  235.214208] vm_start: 7ffff0021000    vm_end: 7ffff4000000    size: 3fdf000
+[  235.214209] vm_start: 7ffff65d8000    vm_end: 7ffff65ee000    size: 16000
+[  235.214209] vm_start: 7ffff65ee000    vm_end: 7ffff67ed000    size: 1ff000
+[  235.214210] vm_start: 7ffff67ed000    vm_end: 7ffff67ee000    size: 1000
+[  235.214211] vm_start: 7ffff67ee000    vm_end: 7ffff67ef000    size: 1000
+[  235.214211] vm_start: 7ffff67ef000    vm_end: 7ffff6fef000    size: 800000
+[  235.214212] vm_start: 7ffff6fef000    vm_end: 7ffff6ff0000    size: 1000
+[  235.214212] vm_start: 7ffff6ff0000    vm_end: 7ffff77f0000    size: 800000
+[  235.214213] vm_start: 7ffff77f0000    vm_end: 7ffff79b0000    size: 1c0000
+[  235.214213] vm_start: 7ffff79b0000    vm_end: 7ffff7bb0000    size: 200000
+[  235.214214] vm_start: 7ffff7bb0000    vm_end: 7ffff7bb4000    size: 4000
+[  235.214215] vm_start: 7ffff7bb4000    vm_end: 7ffff7bb6000    size: 2000
+[  235.214215] vm_start: 7ffff7bb6000    vm_end: 7ffff7bba000    size: 4000
+[  235.214216] vm_start: 7ffff7bba000    vm_end: 7ffff7bd2000    size: 18000
+[  235.214216] vm_start: 7ffff7bd2000    vm_end: 7ffff7dd1000    size: 1ff000
+[  235.214217] vm_start: 7ffff7dd1000    vm_end: 7ffff7dd2000    size: 1000
+[  235.214217] vm_start: 7ffff7dd2000    vm_end: 7ffff7dd3000    size: 1000
+[  235.214218] vm_start: 7ffff7dd3000    vm_end: 7ffff7dd7000    size: 4000
+[  235.214218] vm_start: 7ffff7dd7000    vm_end: 7ffff7dfd000    size: 26000
+[  235.214219] vm_start: 7ffff7fd8000    vm_end: 7ffff7fdc000    size: 4000
+[  235.214219] vm_start: 7ffff7ff7000    vm_end: 7ffff7ffa000    size: 3000
+[  235.214220] vm_start: 7ffff7ffa000    vm_end: 7ffff7ffc000    size: 2000
+[  235.214220] vm_start: 7ffff7ffc000    vm_end: 7ffff7ffd000    size: 1000
+[  235.214221] vm_start: 7ffff7ffd000    vm_end: 7ffff7ffe000    size: 1000
+[  235.214221] vm_start: 7ffff7ffe000    vm_end: 7ffff7fff000    size: 1000
+[  235.214222] vm_start: 7ffffffdd000    vm_end: 7ffffffff000    size: 22000
 ```
 
 ---
@@ -229,7 +128,7 @@ system call return 0
 #### Memory Space Mapping Generated by `info proc mapping` in GDB
 ```
 (gdb) info proc mapping
-process 5436
+process 3260
 Mapped address spaces:
 
           Start Addr           End Addr       Size     Offset objfile
@@ -237,17 +136,17 @@ Mapped address spaces:
             0x601000           0x602000     0x1000     0x1000 /home/shang/repo/Linux-OS-projects/project1/main
             0x602000           0x603000     0x1000     0x2000 /home/shang/repo/Linux-OS-projects/project1/main
             0x603000           0x624000    0x21000        0x0 [heap]
-      0x7fffe8000000     0x7fffe8021000    0x21000        0x0 
+      0x7fffe8000000     0x7fffe8021000    0x21000        0x0 **[heap for thread2]**
       0x7fffe8021000     0x7fffec000000  0x3fdf000        0x0 
-      0x7ffff0000000     0x7ffff0021000    0x21000        0x0 
+      0x7ffff0000000     0x7ffff0021000    0x21000        0x0 **[heap for thread1]**
       0x7ffff0021000     0x7ffff4000000  0x3fdf000        0x0 
       0x7ffff65d8000     0x7ffff65ee000    0x16000        0x0 /lib/x86_64-linux-gnu/libgcc_s.so.1
       0x7ffff65ee000     0x7ffff67ed000   0x1ff000    0x16000 /lib/x86_64-linux-gnu/libgcc_s.so.1
       0x7ffff67ed000     0x7ffff67ee000     0x1000    0x15000 /lib/x86_64-linux-gnu/libgcc_s.so.1
       0x7ffff67ee000     0x7ffff67ef000     0x1000        0x0 
-      0x7ffff67ef000     0x7ffff6fef000   0x800000        0x0 
+      0x7ffff67ef000     0x7ffff6fef000   0x800000        0x0 **[stack for thread2]**
       0x7ffff6fef000     0x7ffff6ff0000     0x1000        0x0 
-      0x7ffff6ff0000     0x7ffff77f0000   0x800000        0x0 
+      0x7ffff6ff0000     0x7ffff77f0000   0x800000        0x0 **[stack for thread1]**
       0x7ffff77f0000     0x7ffff79b0000   0x1c0000        0x0 /lib/x86_64-linux-gnu/libc-2.23.so
       0x7ffff79b0000     0x7ffff7bb0000   0x200000   0x1c0000 /lib/x86_64-linux-gnu/libc-2.23.so
       0x7ffff7bb0000     0x7ffff7bb4000     0x4000   0x1c0000 /lib/x86_64-linux-gnu/libc-2.23.so
