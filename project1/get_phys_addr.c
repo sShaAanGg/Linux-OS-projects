@@ -3,7 +3,7 @@
 #include <linux/sched.h>
 #include <asm/pgtable.h>
 
-SYSCALL_DEFINE1(get_phys_addr, unsigned long, virt_addr)
+SYSCALL_DEFINE2(get_phys_addr, unsigned long, virt_addr, unsigned long *, addr_ptr)
 {
     pgd_t *pgd; // entry of page global directory
     p4d_t *p4d;
@@ -39,6 +39,7 @@ SYSCALL_DEFINE1(get_phys_addr, unsigned long, virt_addr)
     pg_offset = virt_addr & ~PAGE_MASK;
     phys_addr = pg_addr | pg_offset;
 
-    printk("virtual adddress: %lx    physical address: %lx\n", virt_addr, phys_addr);
-    return phys_addr;
+    // printk("virtual adddress: %lx    physical address: %lx\n", virt_addr, phys_addr);
+    *addr_ptr = phys_addr;
+    return 0;
 }

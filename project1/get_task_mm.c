@@ -6,7 +6,7 @@
 #include <linux/syscalls.h>
 // #define __NR_get_phys_addr 335
 
-unsigned long get_phys_addr_syscall(unsigned long virt_addr);
+unsigned long get_phys_addr(unsigned long virt_addr);
 
 SYSCALL_DEFINE0(get_task_mm)
 {
@@ -31,23 +31,23 @@ SYSCALL_DEFINE0(get_task_mm)
     cur_mm = mm;
     cur_mmap = cur_mm->mmap;
 
-    printk("start_code of mm_struct is %lx\n", cur_mm->start_code);
-    phys_addr = get_phys_addr_syscall(cur_mm->start_code);
+    phys_addr = get_phys_addr(cur_mm->start_code);
+    printk("start_code of mm_struct is %lx (pa: %lx)\n", cur_mm->start_code, phys_addr);
     printk("end_code of mm_struct is %lx\n", cur_mm->end_code);
     
-    printk("start_data of mm_struct is %lx\n", cur_mm->start_data);
-    phys_addr = get_phys_addr_syscall(cur_mm->start_data);
+    phys_addr = get_phys_addr(cur_mm->start_data);
+    printk("start_data of mm_struct is %lx (pa: %lx)\n", cur_mm->start_data, phys_addr);
     printk("end_data of mm_struct is %lx\n", cur_mm->end_data);
     
-    printk("start_brk of mm_struct is %lx\n", cur_mm->start_brk);
-    phys_addr = get_phys_addr_syscall(cur_mm->start_brk);
+    phys_addr = get_phys_addr(cur_mm->start_brk);
+    printk("start_brk of mm_struct is %lx (pa: %lx)\n", cur_mm->start_brk, phys_addr);
     printk("brk of mm_struct is %lx\n\n", cur_mm->brk);
     
-    printk("mmap_base of mm_struct is %lx\n\n", cur_mm->mmap_base);
-    phys_addr = get_phys_addr_syscall(cur_mm->mmap_base);
+    phys_addr = get_phys_addr(cur_mm->mmap_base);
+    printk("mmap_base of mm_struct is %lx (pa: %lx)\n\n", cur_mm->mmap_base, phys_addr);
     
-    printk("start_stack of mm_struct is %lx\n", cur_mm->start_stack);
-    phys_addr = get_phys_addr_syscall(cur_mm->start_stack);
+    phys_addr = get_phys_addr(cur_mm->start_stack);
+    printk("start_stack of mm_struct is %lx (pa: %lx)\n", cur_mm->start_stack, phys_addr);
     printk("arg_start of mm_struct is %lx\n", cur_mm->arg_start);
     printk("arg_end of mm_struct is %lx\n\n", cur_mm->arg_end);
 
@@ -57,19 +57,19 @@ SYSCALL_DEFINE0(get_task_mm)
     while (cur_mmap->vm_next != NULL) // iterate through the list of VMAs
     {
         vm_area_size = cur_mmap->vm_end - cur_mmap->vm_start;
-        printk("vm_start: %lx    vm_end: %lx    size: %lx\n", cur_mmap->vm_start, cur_mmap->vm_end, vm_area_size);
-        phys_addr = get_phys_addr_syscall(cur_mmap->vm_start);
+        phys_addr = get_phys_addr(cur_mmap->vm_start);
+        printk("vm_start: %lx (pa: %lx)    vm_end: %lx    size: %lx\n", cur_mmap->vm_start, phys_addr, cur_mmap->vm_end, vm_area_size);
         cur_mmap = cur_mmap->vm_next;
     }
     vm_area_size = cur_mmap->vm_end - cur_mmap->vm_start;
-    printk("vm_start: %lx    vm_end: %lx    size: %lx\n", cur_mmap->vm_start, cur_mmap->vm_end, vm_area_size);
-    phys_addr = get_phys_addr_syscall(cur_mmap->vm_start);
+    phys_addr = get_phys_addr(cur_mmap->vm_start);
+    printk("vm_start: %lx (pa: %lx)    vm_end: %lx    size: %lx\n", cur_mmap->vm_start, phys_addr, cur_mmap->vm_end, vm_area_size);
 
     atomic_dec_and_test(&mm->mm_users);
     return 0;
 }
 
-unsigned long get_phys_addr_syscall(unsigned long virt_addr)
+unsigned long get_phys_addr(unsigned long virt_addr)
 {
     pgd_t *pgd; // entry of page global directory
     p4d_t *p4d;
@@ -105,6 +105,6 @@ unsigned long get_phys_addr_syscall(unsigned long virt_addr)
     pg_offset = virt_addr & ~PAGE_MASK;
     phys_addr = pg_addr | pg_offset;
 
-    printk("virtual adddress: %lx    physical address: %lx\n", virt_addr, phys_addr);
+    // printk("virtual adddress: %lx    physical address: %lx\n\n", virt_addr, phys_addr);
     return phys_addr;
 }
