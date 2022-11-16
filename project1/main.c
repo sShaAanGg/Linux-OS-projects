@@ -6,6 +6,7 @@
 #include <linux/kernel.h>
 #include <sys/syscall.h>
 #define __NR_get_task_mm 334
+#define __NR_get_phys_addr 335
 
 __thread int thread_i;
 char *global_str = "Global variable char *";
@@ -16,11 +17,9 @@ long get_task_mm_syscall(void)
     return syscall(__NR_get_task_mm);
 }
 
-void check_stack(char *str)
+unsigned long get_phys_addr_syscall(unsigned long virt_addr)
 {
-    char *local_str;
-    printf("The address of char *local_str in %s [stack]: %p\n", str, &local_str);
-    return;
+    return (unsigned long) syscall(__NR_get_phys_addr, virt_addr);
 }
 
 void *start_routine(void *arg)
@@ -28,6 +27,7 @@ void *start_routine(void *arg)
     char *heap_str = (char *) malloc(sizeof(char) * 100);
     char *str;
     thread_i = *(int *) arg;
+    unsigned long phys_addr;
         
     if (thread_i == 1) {
         str = "t1";
@@ -41,12 +41,16 @@ void *start_routine(void *arg)
     }
     
     printf("thread: %s\n", str);
-    printf("The value of thread_i in %s: %d (address: %p)\n", str, thread_i, &thread_i);
-    printf("The address of char *str in %s       [stack]: %p\n", str, &str);
-    check_stack(str);
-    
-    printf("The value of char *heap_str in %s    [heap|shared_memory]: %p\n", heap_str, heap_str);
-    printf("The address of global variable char *global_str: %p\n", &global_str);
+    phys_addr = get_phys_addr_syscall((unsigned long) &thread_i);
+    printf("The value of thread_i in %s: %d (address: %p, pa: %lx)\n", str, thread_i, &thread_i, phys_addr);
+    phys_addr = get_phys_addr_syscall((unsigned long) &str);
+    printf("The address of char *str in %s       [stack]: %p, pa: %lx\n", str, &str, phys_addr);
+    phys_addr = get_phys_addr_syscall((unsigned long) heap_str);
+    printf("The value of char *heap_str in %s    [heap|shared_memory]: %p, pa: %lx\n", heap_str, heap_str, phys_addr);
+    phys_addr = get_phys_addr_syscall((unsigned long) &global_str);
+    printf("The address of global variable char *global_str: %p, pa: %lx\n", &global_str, phys_addr);
+    phys_addr = get_phys_addr_syscall((unsigned long) &BSS_str);
+    printf("The address of uninitialized variable char *BSS_str: %p, pa: %lx\n", &BSS_str, phys_addr);
     printf("\n");
     sleep(1);
 
@@ -63,6 +67,8 @@ int main()
     int *arg1, *arg2;
     int i1 = 1, i2 = 2;
     arg1 = &i1, arg2 = &i2;
+    unsigned long phys_addr;
+
     pthread_create(&t1, NULL, start_routine, (void *) arg1);
     sleep(1);
     pthread_create(&t2, NULL, start_routine, (void *) arg2);
@@ -75,11 +81,16 @@ int main()
     strncpy(heap_str, str, 5);
 
     printf("thread: main\n");
-    printf("The value of thread_i in %s: %d (address: %p)\n", str, thread_i, &thread_i);
-    printf("The address of char *str in %s    [stack]: %p\n", str, &str); // str is a local variable
-    printf("The value of char *heap_str in %s [heap]: %p\n", heap_str, heap_str); // heap_str is a local variable; it's the area it points to allocated in heap
-    printf("The address of global variable char *global_str: %p\n", &global_str);
-    printf("The address of uninitialized variable char *BSS_str: %p\n", &BSS_str);
+    phys_addr = get_phys_addr_syscall((unsigned long) &thread_i);
+    printf("The value of thread_i in %s: %d (va: %p, pa: %lx)\n", str, thread_i, &thread_i, phys_addr);
+    phys_addr = get_phys_addr_syscall((unsigned long) &str);
+    printf("The address of char *str in %s    [stack]: %p, pa: %lx\n", str, &str, phys_addr); // str is a local variable
+    phys_addr = get_phys_addr_syscall((unsigned long) heap_str);
+    printf("The value of char *heap_str in %s [heap]: %p, pa: %lx\n", heap_str, heap_str, phys_addr); // heap_str is a local variable; it's the area it points to allocated in heap
+    phys_addr = get_phys_addr_syscall((unsigned long) &global_str);
+    printf("The address of global variable char *global_str: %p, pa: %lx\n", &global_str, phys_addr);
+    phys_addr = get_phys_addr_syscall((unsigned long) &BSS_str);
+    printf("The address of uninitialized variable char *BSS_str: %p, pa: %lx\n", &BSS_str, phys_addr);
     printf("\n");
 
     long l;

@@ -6,6 +6,7 @@
 SYSCALL_DEFINE1(get_phys_addr, unsigned long, virt_addr)
 {
     pgd_t *pgd; // entry of page global directory
+    p4d_t *p4d;
     pud_t *pud; // entry of page upper directory
     pmd_t *pmd; // entry of page middle directory
     pte_t *pte; // entry of page table
@@ -18,7 +19,8 @@ SYSCALL_DEFINE1(get_phys_addr, unsigned long, virt_addr)
         return -1;
     }
 
-    pud = pud_offset(pgd, virt_addr);
+    p4d = (p4d_t *) pgd;
+    pud = pud_offset(p4d, virt_addr);
     if (pud_none(*pud)) {
         return -1;
     }

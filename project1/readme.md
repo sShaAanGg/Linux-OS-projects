@@ -37,25 +37,25 @@ gdb: 8.3
 會得到以下輸出 (執行緒間輸出的順序不固定)
 ```
 thread: t1
-The value of thread_i in t1: 1 (address: 0x7ffff77ef6fc)
-The address of char *str in t1       [stack]: 0x7ffff77eef38
-The address of char *local_str in t1 [stack]: 0x7ffff77eef00
-The value of char *heap_str in t1    [heap|shared_memory]: 0x7ffff00008c0
-The address of global variable char *global_str: 0x602098
+The value of thread_i in t1: 1 (address: 0x7f9cecc516fc, pa: cac056fc)
+The address of char *str in t1       [stack]: 0x7f9cecc50f30, pa: c43d7f30
+The value of char *heap_str in t1    [heap|shared_memory]: 0x7f9ce80008c0, pa: cb79b8c0
+The address of global variable char *global_str: 0x602098, pa: 4528a098
+The address of uninitialized variable char *BSS_str: 0x6020a8, pa: 4528a0a8
 
 thread: t2
-The value of thread_i in t2: 2 (address: 0x7ffff6fee6fc)
-The address of char *str in t2       [stack]: 0x7ffff6fedf38
-The address of char *local_str in t2 [stack]: 0x7ffff6fedf00
-The value of char *heap_str in t2    [heap|shared_memory]: 0x7fffe80008c0
-The address of global variable char *global_str: 0x602098
+The value of thread_i in t2: 2 (address: 0x7f9ce7fff6fc, pa: c4ef76fc)
+The address of char *str in t2       [stack]: 0x7f9ce7ffef30, pa: cac00f30
+The value of char *heap_str in t2    [heap|shared_memory]: 0x7f9ce00008c0, pa: 1be168c0
+The address of global variable char *global_str: 0x602098, pa: 4528a098
+The address of uninitialized variable char *BSS_str: 0x6020a8, pa: 4528a0a8
 
 thread: main
-The value of thread_i in main: 0 (address: 0x7ffff7fd96fc)
-The address of char *str in main    [stack]: 0x7fffffffd848
-The value of char *heap_str in main [heap]: 0x603270
-The address of global variable char *global_str: 0x602098
-The address of uninitialized variable char *BSS_str: 0x6020a8
+The value of thread_i in main: 0 (va: 0x7f9ced4406fc, pa: c7446fc)
+The address of char *str in main    [stack]: 0x7ffcdf723520, pa: c7cfc520
+The value of char *heap_str in main [heap]: 0xe35270, pa: caa36270
+The address of global variable char *global_str: 0x602098, pa: 4528a098
+The address of uninitialized variable char *BSS_str: 0x6020a8, pa: 4528a0a8
 
 system call return 0
 ```
@@ -65,55 +65,95 @@ system call return 0
 ### Output of `dmesg`
 此時再輸入 `dmesg` 會得到以下輸出
 ```
-[  235.213826] start_code of mm_struct is 400000
-[  235.213827] end_code of mm_struct is 40119c
-[  235.214197] start_data of mm_struct is 601e00
-[  235.214200] end_data of mm_struct is 6020a0
-[  235.214200] start_brk of mm_struct is 603000
-[  235.214201] brk of mm_struct is 624000
+[  155.241730] virtual adddress: 7f9cecc516fc    physical address: cac056fc
+[  155.241736] virtual adddress: 7f9cecc50f30    physical address: c43d7f30
+[  155.241738] virtual adddress: 7f9ce80008c0    physical address: cb79b8c0
+[  155.241740] virtual adddress: 602098    physical address: 4528a098
+[  155.241742] virtual adddress: 6020a8    physical address: 4528a0a8
+[  156.242080] virtual adddress: 7f9ce7fff6fc    physical address: c4ef76fc
+[  156.242083] virtual adddress: 7f9ce7ffef30    physical address: cac00f30
+[  156.242086] virtual adddress: 7f9ce00008c0    physical address: 1be168c0
+[  156.242088] virtual adddress: 602098    physical address: 4528a098
+[  156.242090] virtual adddress: 6020a8    physical address: 4528a0a8
+[  157.242760] virtual adddress: 7f9ced4406fc    physical address: c7446fc
+[  157.242767] virtual adddress: 7ffcdf723520    physical address: c7cfc520
+[  157.242769] virtual adddress: e35270    physical address: caa36270
+[  157.242772] virtual adddress: 602098    physical address: 4528a098
+[  157.242774] virtual adddress: 6020a8    physical address: 4528a0a8
+[  157.242777] start_code of mm_struct is 400000
+[  157.242778] virtual adddress: 400000    physical address: ca85f000
+[  157.242778] end_code of mm_struct is 4012b4
+[  157.242779] start_data of mm_struct is 601e00
+[  157.242779] virtual adddress: 601e00    physical address: 50005e00
+[  157.242780] end_data of mm_struct is 6020a0
+[  157.242780] start_brk of mm_struct is e35000
+[  157.242780] virtual adddress: e35000    physical address: caa36000
+[  157.242781] brk of mm_struct is e56000
 
-[  235.214201] mmap_base of mm_struct is 7ffff7fff000
+[  157.242781] mmap_base of mm_struct is 7f9ced461000
 
-[  235.214201] start_stack of mm_struct is 7fffffffd960
-[  235.214202] arg_start of mm_struct is 7fffffffddc6
-[  235.214202] arg_end of mm_struct is 7fffffffddf7
+[  157.242782] start_stack of mm_struct is 7ffcdf723640
+[  157.242782] virtual adddress: 7ffcdf723640    physical address: c7cfc640
+[  157.242783] arg_start of mm_struct is 7ffcdf723e9c
+[  157.242783] arg_end of mm_struct is 7ffcdf723ea3
 
-[  235.214203] env_start of mm_struct is 7fffffffddf7
-[  235.214203] env_end of mm_struct is 7fffffffefc7
+[  157.242783] env_start of mm_struct is 7ffcdf723ea3
+[  157.242784] env_end of mm_struct is 7ffcdf724ff1
 
-[  235.214204] vm_start: 400000    vm_end: 402000    size: 2000
-[  235.214204] vm_start: 601000    vm_end: 602000    size: 1000
-[  235.214205] vm_start: 602000    vm_end: 603000    size: 1000
-[  235.214206] vm_start: 603000    vm_end: 624000    size: 21000
-[  235.214206] vm_start: 7fffe8000000    vm_end: 7fffe8021000    size: 21000
-[  235.214207] vm_start: 7fffe8021000    vm_end: 7fffec000000    size: 3fdf000
-[  235.214208] vm_start: 7ffff0000000    vm_end: 7ffff0021000    size: 21000
-[  235.214208] vm_start: 7ffff0021000    vm_end: 7ffff4000000    size: 3fdf000
-[  235.214209] vm_start: 7ffff65d8000    vm_end: 7ffff65ee000    size: 16000
-[  235.214209] vm_start: 7ffff65ee000    vm_end: 7ffff67ed000    size: 1ff000
-[  235.214210] vm_start: 7ffff67ed000    vm_end: 7ffff67ee000    size: 1000
-[  235.214211] vm_start: 7ffff67ee000    vm_end: 7ffff67ef000    size: 1000
-[  235.214211] vm_start: 7ffff67ef000    vm_end: 7ffff6fef000    size: 800000
-[  235.214212] vm_start: 7ffff6fef000    vm_end: 7ffff6ff0000    size: 1000
-[  235.214212] vm_start: 7ffff6ff0000    vm_end: 7ffff77f0000    size: 800000
-[  235.214213] vm_start: 7ffff77f0000    vm_end: 7ffff79b0000    size: 1c0000
-[  235.214213] vm_start: 7ffff79b0000    vm_end: 7ffff7bb0000    size: 200000
-[  235.214214] vm_start: 7ffff7bb0000    vm_end: 7ffff7bb4000    size: 4000
-[  235.214215] vm_start: 7ffff7bb4000    vm_end: 7ffff7bb6000    size: 2000
-[  235.214215] vm_start: 7ffff7bb6000    vm_end: 7ffff7bba000    size: 4000
-[  235.214216] vm_start: 7ffff7bba000    vm_end: 7ffff7bd2000    size: 18000
-[  235.214216] vm_start: 7ffff7bd2000    vm_end: 7ffff7dd1000    size: 1ff000
-[  235.214217] vm_start: 7ffff7dd1000    vm_end: 7ffff7dd2000    size: 1000
-[  235.214217] vm_start: 7ffff7dd2000    vm_end: 7ffff7dd3000    size: 1000
-[  235.214218] vm_start: 7ffff7dd3000    vm_end: 7ffff7dd7000    size: 4000
-[  235.214218] vm_start: 7ffff7dd7000    vm_end: 7ffff7dfd000    size: 26000
-[  235.214219] vm_start: 7ffff7fd8000    vm_end: 7ffff7fdc000    size: 4000
-[  235.214219] vm_start: 7ffff7ff7000    vm_end: 7ffff7ffa000    size: 3000
-[  235.214220] vm_start: 7ffff7ffa000    vm_end: 7ffff7ffc000    size: 2000
-[  235.214220] vm_start: 7ffff7ffc000    vm_end: 7ffff7ffd000    size: 1000
-[  235.214221] vm_start: 7ffff7ffd000    vm_end: 7ffff7ffe000    size: 1000
-[  235.214221] vm_start: 7ffff7ffe000    vm_end: 7ffff7fff000    size: 1000
-[  235.214222] vm_start: 7ffffffdd000    vm_end: 7ffffffff000    size: 22000
+[  157.242784] vm_start: 400000    vm_end: 402000    size: 2000
+[  157.242785] virtual adddress: 400000    physical address: ca85f000
+[  157.242786] vm_start: 601000    vm_end: 602000    size: 1000
+[  157.242786] virtual adddress: 601000    physical address: 50005000
+[  157.242787] vm_start: 602000    vm_end: 603000    size: 1000
+[  157.242787] virtual adddress: 602000    physical address: 4528a000
+[  157.242788] vm_start: e35000    vm_end: e56000    size: 21000
+[  157.242788] virtual adddress: e35000    physical address: caa36000
+[  157.242789] vm_start: 7f9ce0000000    vm_end: 7f9ce0021000    size: 21000
+[  157.242790] virtual adddress: 7f9ce0000000    physical address: 1be16000
+[  157.242790] vm_start: 7f9ce0021000    vm_end: 7f9ce4000000    size: 3fdf000
+[  157.242791] vm_start: 7f9ce77ff000    vm_end: 7f9ce7800000    size: 1000
+[  157.242792] vm_start: 7f9ce7800000    vm_end: 7f9ce8000000    size: 800000
+[  157.242793] vm_start: 7f9ce8000000    vm_end: 7f9ce8021000    size: 21000
+[  157.242793] virtual adddress: 7f9ce8000000    physical address: cb79b000
+[  157.242794] vm_start: 7f9ce8021000    vm_end: 7f9cec000000    size: 3fdf000
+[  157.242794] vm_start: 7f9cec23b000    vm_end: 7f9cec251000    size: 16000
+[  157.242795] virtual adddress: 7f9cec23b000    physical address: 10a940000
+[  157.242796] vm_start: 7f9cec251000    vm_end: 7f9cec450000    size: 1ff000
+[  157.242796] vm_start: 7f9cec450000    vm_end: 7f9cec451000    size: 1000
+[  157.242797] virtual adddress: 7f9cec450000    physical address: ca155000
+[  157.242797] vm_start: 7f9cec451000    vm_end: 7f9cec452000    size: 1000
+[  157.242798] vm_start: 7f9cec452000    vm_end: 7f9cecc52000    size: 800000
+[  157.242798] vm_start: 7f9cecc52000    vm_end: 7f9cece12000    size: 1c0000
+[  157.242799] virtual adddress: 7f9cecc52000    physical address: 11fe3f000
+[  157.242800] vm_start: 7f9cece12000    vm_end: 7f9ced012000    size: 200000
+[  157.242800] vm_start: 7f9ced012000    vm_end: 7f9ced016000    size: 4000
+[  157.242801] virtual adddress: 7f9ced012000    physical address: cf3c6000
+[  157.242801] vm_start: 7f9ced016000    vm_end: 7f9ced018000    size: 2000
+[  157.242802] virtual adddress: 7f9ced016000    physical address: 40519000
+[  157.242802] vm_start: 7f9ced018000    vm_end: 7f9ced01c000    size: 4000
+[  157.242803] virtual adddress: 7f9ced018000    physical address: caa37000
+[  157.242803] vm_start: 7f9ced01c000    vm_end: 7f9ced034000    size: 18000
+[  157.242804] virtual adddress: 7f9ced01c000    physical address: 11fe1a000
+[  157.242804] vm_start: 7f9ced034000    vm_end: 7f9ced233000    size: 1ff000
+[  157.242805] vm_start: 7f9ced233000    vm_end: 7f9ced234000    size: 1000
+[  157.242806] virtual adddress: 7f9ced233000    physical address: 43dfa000
+[  157.242806] vm_start: 7f9ced234000    vm_end: 7f9ced235000    size: 1000
+[  157.242807] virtual adddress: 7f9ced234000    physical address: 134b3000
+[  157.242807] vm_start: 7f9ced235000    vm_end: 7f9ced239000    size: 4000
+[  157.242808] vm_start: 7f9ced239000    vm_end: 7f9ced25f000    size: 26000
+[  157.242808] virtual adddress: 7f9ced239000    physical address: 11fd3e000
+[  157.242809] vm_start: 7f9ced43f000    vm_end: 7f9ced443000    size: 4000
+[  157.242810] virtual adddress: 7f9ced43f000    physical address: 40518000
+[  157.242810] vm_start: 7f9ced45e000    vm_end: 7f9ced45f000    size: 1000
+[  157.242811] virtual adddress: 7f9ced45e000    physical address: 3fc28000
+[  157.242811] vm_start: 7f9ced45f000    vm_end: 7f9ced460000    size: 1000
+[  157.242812] virtual adddress: 7f9ced45f000    physical address: 5f2cb000
+[  157.242812] vm_start: 7f9ced460000    vm_end: 7f9ced461000    size: 1000
+[  157.242813] virtual adddress: 7f9ced460000    physical address: 43b35000
+[  157.242813] vm_start: 7ffcdf703000    vm_end: 7ffcdf725000    size: 22000
+[  157.242814] vm_start: 7ffcdf74e000    vm_end: 7ffcdf751000    size: 3000
+[  157.242815] vm_start: 7ffcdf751000    vm_end: 7ffcdf753000    size: 2000
+[  157.242815] virtual adddress: 7ffcdf751000    physical address: d6396000
 ```
 
 ---
