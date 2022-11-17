@@ -33,15 +33,18 @@ SYSCALL_DEFINE0(get_task_mm)
 
     phys_addr = get_phys_addr(cur_mm->start_code);
     printk("start_code of mm_struct is %lx (pa: %lx)\n", cur_mm->start_code, phys_addr);
-    printk("end_code of mm_struct is %lx\n", cur_mm->end_code);
+    phys_addr = get_phys_addr(cur_mm->end_code);
+    printk("end_code of mm_struct is %lx (pa: %lx)\n", cur_mm->end_code, phys_addr);
     
     phys_addr = get_phys_addr(cur_mm->start_data);
     printk("start_data of mm_struct is %lx (pa: %lx)\n", cur_mm->start_data, phys_addr);
-    printk("end_data of mm_struct is %lx\n", cur_mm->end_data);
+    phys_addr = get_phys_addr(cur_mm->end_data);
+    printk("end_data of mm_struct is %lx (pa: %lx)\n", cur_mm->end_data, phys_addr);
     
     phys_addr = get_phys_addr(cur_mm->start_brk);
     printk("start_brk of mm_struct is %lx (pa: %lx)\n", cur_mm->start_brk, phys_addr);
-    printk("brk of mm_struct is %lx\n\n", cur_mm->brk);
+    phys_addr = get_phys_addr(cur_mm->brk);
+    printk("brk of mm_struct is %lx (pa: %lx)\n\n", cur_mm->brk, phys_addr);
     
     phys_addr = get_phys_addr(cur_mm->mmap_base);
     printk("mmap_base of mm_struct is %lx (pa: %lx)\n\n", cur_mm->mmap_base, phys_addr);
@@ -49,7 +52,7 @@ SYSCALL_DEFINE0(get_task_mm)
     phys_addr = get_phys_addr(cur_mm->start_stack);
     printk("start_stack of mm_struct is %lx (pa: %lx)\n", cur_mm->start_stack, phys_addr);
     printk("arg_start of mm_struct is %lx\n", cur_mm->arg_start);
-    printk("arg_end of mm_struct is %lx\n\n", cur_mm->arg_end);
+    printk("arg_end of mm_struct is %lx\n", cur_mm->arg_end);
 
     printk("env_start of mm_struct is %lx\n", cur_mm->env_start);
     printk("env_end of mm_struct is %lx\n\n", cur_mm->env_end);

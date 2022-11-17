@@ -37,25 +37,25 @@ gdb: 8.3
 會得到以下輸出 (執行緒間輸出的順序不固定)
 ```
 thread: t1
-The value of thread_i in t1: 1 (address: 0x7f46a3e056fc, pa: 464176fc)
-The address of char *str in t1       [stack]: 0x7f46a3e04f28, pa: 3d6aff28
-The value of char *heap_str in t1    [heap|shared_memory]: 0x7f469c0008c0, pa: 3d6be8c0
-The address of global variable char *global_str: 0x6020a0, pa: 3e2ef0a0
-The address of uninitialized variable char *BSS_str: 0x6020b0, pa: 3e2ef0b0
+The value of thread_i in t1: 1 (address: 0x7fbd7cee66fc, pa: f0386fc)
+The address of char *str in t1       [stack]: 0x7fbd7cee5f28, pa: cc551f28
+The value of char *heap_str in t1    [heap|shared_memory]: 0x7fbd780008c0, pa: c98c8c0
+The address of global variable char *global_str: 0x6020a0, pa: 41690a0
+The address of uninitialized variable char *BSS_str: 0x6020b0, pa: 41690b0
 
 thread: t2
-The value of thread_i in t2: 2 (address: 0x7f46a36046fc, pa: 464156fc)
-The address of char *str in t2       [stack]: 0x7f46a3603f28, pa: 4641df28
-The value of char *heap_str in t2    [heap|shared_memory]: 0x7f46940008c0, pa: c9548c0
-The address of global variable char *global_str: 0x6020a0, pa: 3e2ef0a0
-The address of uninitialized variable char *BSS_str: 0x6020b0, pa: 3e2ef0b0
+The value of thread_i in t2: 2 (address: 0x7fbd77fff6fc, pa: e2736fc)
+The address of char *str in t2       [stack]: 0x7fbd77ffef28, pa: d3f52f28
+The value of char *heap_str in t2    [heap|shared_memory]: 0x7fbd700008c0, pa: d55918c0
+The address of global variable char *global_str: 0x6020a0, pa: 41690a0
+The address of uninitialized variable char *BSS_str: 0x6020b0, pa: 41690b0
 
 thread: main
-The value of thread_i in main: 0 (va: 0x7f46a45f46fc, pa: 477026fc)
-The address of char *str in main    [stack]: 0x7fff1dd1c450, pa: 4641c450
-The value of char *heap_str in main [heap]: 0x10b4270, pa: 46418270
-The address of global variable char *global_str: 0x6020a0, pa: 3e2ef0a0
-The address of uninitialized variable char *BSS_str: 0x6020b0, pa: 3e2ef0b0
+The value of thread_i in main: 0 (va: 0x7fbd7d6d56fc, pa: 3d5c16fc)
+The address of char *str in main    [stack]: 0x7ffeb831da70, pa: 1b85ba70
+The value of char *heap_str in main [heap]: 0x249e270, pa: 11c47270
+The address of global variable char *global_str: 0x6020a0, pa: 41690a0
+The address of uninitialized variable char *BSS_str: 0x6020b0, pa: 41690b0
 
 system call return 0
 ```
@@ -65,55 +65,54 @@ system call return 0
 ### Output of `dmesg`
 此時再輸入 `dmesg` 會得到以下輸出
 ```
-[  198.769443] start_code of mm_struct is 400000
-[  198.769444] end_code of mm_struct is 401364
-[  198.769444] start_data of mm_struct is 601e00
-[  198.769444] end_data of mm_struct is 6020a8
-[  198.769445] start_brk of mm_struct is 10b4000
-[  198.769445] brk of mm_struct is 10d5000
+[  221.596637] start_code of mm_struct is 400000 (pa: d542d000)
+[  221.596639] end_code of mm_struct is 401364 (pa: 6c9e364)
+[  221.596639] start_data of mm_struct is 601e00 (pa: cfefce00)
+[  221.596640] end_data of mm_struct is 6020a8 (pa: 41690a8)
+[  221.596640] start_brk of mm_struct is 249e000 (pa: 11c47000)
+[  221.596641] brk of mm_struct is 24bf000 (pa: ffffffffffffffff)
 
-[  198.769446] mmap_base of mm_struct is 7f46a4615000
+[  221.596641] mmap_base of mm_struct is 7fbd7d6f6000 (pa: ffffffffffffffff)
 
-[  198.769446] start_stack of mm_struct is 7fff1dd1c570
-[  198.769447] arg_start of mm_struct is 7fff1dd1de36
-[  198.769447] arg_end of mm_struct is 7fff1dd1de3d
+[  221.596642] start_stack of mm_struct is 7ffeb831db90 (pa: 1b85bb90)
+[  221.596642] arg_start of mm_struct is 7ffeb831ee36
+[  221.596643] arg_end of mm_struct is 7ffeb831ee3d
+[  221.596643] env_start of mm_struct is 7ffeb831ee3d
+[  221.596643] env_end of mm_struct is 7ffeb831fff1
 
-[  198.769448] env_start of mm_struct is 7fff1dd1de3d
-[  198.769628] env_end of mm_struct is 7fff1dd1eff1
-
-[  198.769630] vm_start: 400000 (pa: f56b000)    vm_end: 402000    size: 2000
-[  198.769631] vm_start: 601000 (pa: 66441000)    vm_end: 602000    size: 1000
-[  198.769635] vm_start: 602000 (pa: 3e2ef000)    vm_end: 603000    size: 1000
-[  198.769638] vm_start: 10b4000 (pa: 46418000)    vm_end: 10d5000    size: 21000
-[  198.769647] vm_start: 7f4694000000 (pa: c954000)    vm_end: 7f4694021000    size: 21000
-[  198.769652] vm_start: 7f4694021000 (pa: ffffffffffffffff)    vm_end: 7f4698000000    size: 3fdf000
-[  198.769653] vm_start: 7f469c000000 (pa: 3d6be000)    vm_end: 7f469c021000    size: 21000
-[  198.769657] vm_start: 7f469c021000 (pa: ffffffffffffffff)    vm_end: 7f46a0000000    size: 3fdf000
-[  198.769663] vm_start: 7f46a2bee000 (pa: 10f19f000)    vm_end: 7f46a2c04000    size: 16000
-[  198.769671] vm_start: 7f46a2c04000 (pa: ffffffffffffffff)    vm_end: 7f46a2e03000    size: 1ff000
-[  198.769677] vm_start: 7f46a2e03000 (pa: 166fe000)    vm_end: 7f46a2e04000    size: 1000
-[  198.769678] vm_start: 7f46a2e04000 (pa: ffffffffffffffff)    vm_end: 7f46a2e05000    size: 1000
-[  198.769679] vm_start: 7f46a2e05000 (pa: ffffffffffffffff)    vm_end: 7f46a3605000    size: 800000
-[  198.769683] vm_start: 7f46a3605000 (pa: ffffffffffffffff)    vm_end: 7f46a3606000    size: 1000
-[  198.769686] vm_start: 7f46a3606000 (pa: ffffffffffffffff)    vm_end: 7f46a3e06000    size: 800000
-[  198.769689] vm_start: 7f46a3e06000 (pa: 11fe40000)    vm_end: 7f46a3fc6000    size: 1c0000
-[  198.769693] vm_start: 7f46a3fc6000 (pa: ffffffffffffffff)    vm_end: 7f46a41c6000    size: 200000
-[  198.769702] vm_start: 7f46a41c6000 (pa: 47705000)    vm_end: 7f46a41ca000    size: 4000
-[  198.769704] vm_start: 7f46a41ca000 (pa: 46413000)    vm_end: 7f46a41cc000    size: 2000
-[  198.769706] vm_start: 7f46a41cc000 (pa: 46419000)    vm_end: 7f46a41d0000    size: 4000
-[  198.769710] vm_start: 7f46a41d0000 (pa: 11fe1b000)    vm_end: 7f46a41e8000    size: 18000
-[  198.769710] vm_start: 7f46a41e8000 (pa: ffffffffffffffff)    vm_end: 7f46a43e7000    size: 1ff000
-[  198.769711] vm_start: 7f46a43e7000 (pa: 47700000)    vm_end: 7f46a43e8000    size: 1000
-[  198.769712] vm_start: 7f46a43e8000 (pa: 4641a000)    vm_end: 7f46a43e9000    size: 1000
-[  198.769712] vm_start: 7f46a43e9000 (pa: ffffffffffffffff)    vm_end: 7f46a43ed000    size: 4000
-[  198.769713] vm_start: 7f46a43ed000 (pa: 11fd3e000)    vm_end: 7f46a4413000    size: 26000
-[  198.769714] vm_start: 7f46a45f3000 (pa: 47703000)    vm_end: 7f46a45f7000    size: 4000
-[  198.769714] vm_start: 7f46a4612000 (pa: 4770a000)    vm_end: 7f46a4613000    size: 1000
-[  198.769715] vm_start: 7f46a4613000 (pa: 1b3f7000)    vm_end: 7f46a4614000    size: 1000
-[  198.769716] vm_start: 7f46a4614000 (pa: 1008a000)    vm_end: 7f46a4615000    size: 1000
-[  198.769717] vm_start: 7fff1dcfd000 (pa: ffffffffffffffff)    vm_end: 7fff1dd1f000    size: 22000
-[  198.769717] vm_start: 7fff1dd28000 (pa: ffffffffffffffff)    vm_end: 7fff1dd2b000    size: 3000
-[  198.769718] vm_start: 7fff1dd2b000 (pa: 9596000)    vm_end: 7fff1dd2d000    size: 2000
+[  221.596645] vm_start: 400000 (pa: d542d000)    vm_end: 402000    size: 2000
+[  221.596645] vm_start: 601000 (pa: cfefc000)    vm_end: 602000    size: 1000
+[  221.596646] vm_start: 602000 (pa: 4169000)    vm_end: 603000    size: 1000
+[  221.596647] vm_start: 249e000 (pa: 11c47000)    vm_end: 24bf000    size: 21000
+[  221.596648] vm_start: 7fbd70000000 (pa: d5591000)    vm_end: 7fbd70021000    size: 21000
+[  221.596649] vm_start: 7fbd70021000 (pa: ffffffffffffffff)    vm_end: 7fbd74000000    size: 3fdf000
+[  221.596650] vm_start: 7fbd777ff000 (pa: ffffffffffffffff)    vm_end: 7fbd77800000    size: 1000
+[  221.596650] vm_start: 7fbd77800000 (pa: ffffffffffffffff)    vm_end: 7fbd78000000    size: 800000
+[  221.596651] vm_start: 7fbd78000000 (pa: c98c000)    vm_end: 7fbd78021000    size: 21000
+[  221.596652] vm_start: 7fbd78021000 (pa: ffffffffffffffff)    vm_end: 7fbd7c000000    size: 3fdf000
+[  221.596653] vm_start: 7fbd7c4d0000 (pa: 10bb67000)    vm_end: 7fbd7c4e6000    size: 16000
+[  221.596653] vm_start: 7fbd7c4e6000 (pa: ffffffffffffffff)    vm_end: 7fbd7c6e5000    size: 1ff000
+[  221.596654] vm_start: 7fbd7c6e5000 (pa: 119c7000)    vm_end: 7fbd7c6e6000    size: 1000
+[  221.596655] vm_start: 7fbd7c6e6000 (pa: ffffffffffffffff)    vm_end: 7fbd7c6e7000    size: 1000
+[  221.596656] vm_start: 7fbd7c6e7000 (pa: ffffffffffffffff)    vm_end: 7fbd7cee7000    size: 800000
+[  221.596656] vm_start: 7fbd7cee7000 (pa: 11fe3f000)    vm_end: 7fbd7d0a7000    size: 1c0000
+[  221.596657] vm_start: 7fbd7d0a7000 (pa: ffffffffffffffff)    vm_end: 7fbd7d2a7000    size: 200000
+[  221.596658] vm_start: 7fbd7d2a7000 (pa: 119f7000)    vm_end: 7fbd7d2ab000    size: 4000
+[  221.596659] vm_start: 7fbd7d2ab000 (pa: 55e00000)    vm_end: 7fbd7d2ad000    size: 2000
+[  221.596659] vm_start: 7fbd7d2ad000 (pa: d228f000)    vm_end: 7fbd7d2b1000    size: 4000
+[  221.596660] vm_start: 7fbd7d2b1000 (pa: 11fe1a000)    vm_end: 7fbd7d2c9000    size: 18000
+[  221.596661] vm_start: 7fbd7d2c9000 (pa: ffffffffffffffff)    vm_end: 7fbd7d4c8000    size: 1ff000
+[  221.596662] vm_start: 7fbd7d4c8000 (pa: 42da000)    vm_end: 7fbd7d4c9000    size: 1000
+[  221.596662] vm_start: 7fbd7d4c9000 (pa: d106e000)    vm_end: 7fbd7d4ca000    size: 1000
+[  221.596663] vm_start: 7fbd7d4ca000 (pa: ffffffffffffffff)    vm_end: 7fbd7d4ce000    size: 4000
+[  221.596664] vm_start: 7fbd7d4ce000 (pa: 11fd3e000)    vm_end: 7fbd7d4f4000    size: 26000
+[  221.596665] vm_start: 7fbd7d6d4000 (pa: 1902b000)    vm_end: 7fbd7d6d8000    size: 4000
+[  221.596665] vm_start: 7fbd7d6f3000 (pa: d54bb000)    vm_end: 7fbd7d6f4000    size: 1000
+[  221.596666] vm_start: 7fbd7d6f4000 (pa: 1eb0000)    vm_end: 7fbd7d6f5000    size: 1000
+[  221.596667] vm_start: 7fbd7d6f5000 (pa: 1a0b3000)    vm_end: 7fbd7d6f6000    size: 1000
+[  221.596668] vm_start: 7ffeb82fe000 (pa: ffffffffffffffff)    vm_end: 7ffeb8320000    size: 22000
+[  221.596668] vm_start: 7ffeb8331000 (pa: ffffffffffffffff)    vm_end: 7ffeb8334000    size: 3000
+[  221.596669] vm_start: 7ffeb8334000 (pa: 69396000)    vm_end: 7ffeb8336000    size: 2000
 ```
 
 ---
