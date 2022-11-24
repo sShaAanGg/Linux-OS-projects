@@ -5,11 +5,7 @@ Distribution: Ubuntu 16.04.7
 gcc: 5.4.0 
 gdb: 8.3
 ### Kernel Space Code (New System Call)
-#### References:
-> [get_pid和get_task_mm](https://zhuanlan.zhihu.com/p/41788388)  
-> [__task_pid_nr_ns和find_get_pid](https://zhuanlan.zhihu.com/p/41260133)
-
-
+#### 1. get_task_mm.c
 引用自 [Process Descriptor - Understanding the Linux Kernel](https://www.oreilly.com/library/view/understanding-the-linux/0596002130/ch03s02.html)
 > This is the role of the process descriptor — a **task_struct** type structure whose fields contain all the information related to a single process.
 
@@ -22,10 +18,32 @@ gdb: 8.3
 > [img src2](https://stackoverflow.com/questions/63497757/why-does-the-vm-area-struct-have-start-code-end-code-field)
 ![img link](https://i.stack.imgur.com/0kIuB.jpg)
 
-此系統呼叫能透過 pid 得到 current process 的 task_struct，再透過 task_struct 得到其成員 mm_struct，藉此存取 mm_struct 的成員 **mmap (a list of vm_area_struct)**, start_code, end_code, start_data, end_data ...
+此系統呼叫能透過 pid 得到 current process 的 task_struct，再透過 task_struct 得到其成員 mm_struct，藉此存取 mm_struct 的成員 **mmap (a list of vm_area_struct)**, start_code,end_code, start_data, end_data ...  
 [Link to Source Code](https://github.com/sShaAanGg/Linux-OS-projects/blob/main/project1/get_task_mm.c)
 
-#### 新增 system call 與編譯核心過程
+#### 2. get_phys_addr.c
+
+> [Kconfig - arch/x86/Kconfig - Linux source code (v4.15.1) - Bootlin](https://elixir.bootlin.com/linux/v4.15.1/source/arch/x86/Kconfig#L331)
+```
+config PGTABLE_LEVELS
+	int
+	default 5 if X86_5LEVEL
+	default 4 if X86_64
+	default 3 if X86_PAE
+	default 2
+```
+在 X86_64 沒有開啟 PAE (physical address extension) 與 X86_5LEVEL 的情況下 page table 應為四層 (pgd, pud, pmd, pte)
+```
+➜  project1 git:(main) ✗ cat /boot/config-`uname -r` | grep 5LEVEL        
+# CONFIG_X86_5LEVEL is not set
+```
+> [pgtable.h - arch/x86/include/asm/pgtable.h - Linux source code (v4.15.1) - Bootlin](https://elixir.bootlin.com/linux/v4.15.1/source/arch/x86/include/asm/pgtable.h)
+
+`pgd_offset()`, `pud_offset()` 等 functions 定義在上述 header file，透過這些 functions & `current->mm->pgd` 我們就能確定 kernel 有無對某 virtual address 分配 page frame，沒有的話以下新增的 system call 會傳回 -1，若有則會透過傳入的 `unsigned long *addr_ptr` 將傳入的 virtual address 在 page tables 中對應的 physical address 儲存在 caller 的 stack (local variable) 裡面 (實際程式碼在下方的 user space code `main.c` 當中)
+
+[Link to Source Code](https://github.com/sShaAanGg/Linux-OS-projects/blob/main/project1/get_phys_addr.c)
+
+### 新增 system call 與編譯核心過程
 > [Adding A System Call To The Linux Kernel](https://dev.to/jasper/adding-a-system-call-to-the-linux-kernel-5-8-1-in-ubuntu-20-04-lts-2ga8)
 ### User Space Code
 [Link to Source Code](https://github.com/sShaAanGg/Linux-OS-projects/blob/main/project1/main.c)
@@ -59,9 +77,11 @@ The address of uninitialized variable char *BSS_str: 0x6020b0, pa: 41690b0
 
 system call return 0
 ```
-* 可以發現全域變數 `__thread int thread_i` 在**不同執行緒裡都有一份 (位址不同且值也不同，為不同的變數)**
-
+- 可以發現全域變數 `__thread int thread_i` 在**不同執行緒裡都有一份 (virtual address, physical address 不同)**
 符合 [Thread-Local Storage](https://web.mit.edu/rhel-doc/3/rhel-gcc-en-3/thread-local.html) 裡面對 thread-local variable 的說明
+
+- 不管有沒有起始初始值，全域變數都是完全相同的，在**不同執行緒裡都是存取到同一變數 (virtual address, physical address 相同)**，因此可以確認 data segment, BSS segment 確實是共享的
+
 ### Output of `dmesg`
 此時再輸入 `dmesg` 會得到以下輸出
 ```
@@ -114,6 +134,7 @@ system call return 0
 [  221.596668] vm_start: 7ffeb8331000 (pa: ffffffffffffffff)    vm_end: 7ffeb8334000    size: 3000
 [  221.596669] vm_start: 7ffeb8334000 (pa: 69396000)    vm_end: 7ffeb8336000    size: 2000
 ```
+pa (physical address) 若為 ffffffffffffffff (-1) 表示 virtual address 對應的某一層 page directory 或 table entry 的值為 0，kernel 並沒有配置 page frame 給該 virtual address
 
 ---
 ### Virtual Memory Layout
@@ -172,11 +193,17 @@ Mapped address spaces:
 2. 在執行緒的 `start_routine()` 中透過 `malloc()` 動態配置的由 `char *heap_str` 所指向的空間位於 [heap] 與 `/lib/x86_64-linux-gnu/libgcc_s.so.1` 之間的**兩個不同的可讀可寫區段** (上方標示之 [heap for thread[1|2]])
 根據 [Jason/cntofu.com, 深入 Linux 多線程編程](https://cntofu.com/book/46/linux_system/shen_rulinux_duo_xian_cheng_bian_cheng.md)，該空間應屬於 shared library, shared memory，且執行緒間共享 heap
     - 問題一: 若同一 process 內的執行緒共享 [heap] 的話，則與上述 2. 的狀況不符
+    > [Heap Exploitation Part 1: Understanding the Glibc Heap Implementation |  Azeria Labs](https://azeria-labs.com/heap-exploitation-part-1-understanding-the-glibc-heap-implementation/)
 
+    上述連結中的 **arena**, **subheap** 應該與此有關
+    > 在 multithreaded application 裡面為避免 race condition 需要用 mutex lock 來確保任何時間點僅有單一的 thread 可以和 heap 互動，但此策略在 multithreaded application 裡因 heap operations 為 performance sensitive 的操作會導致效能低下的狀況，因此有了 "arenas" 的概念
+
+    > 一開始的 (“main”) arena 僅包含單一的 heap，對於 single-threaded application 來說這是 heap manager 唯一用到的 arena。當新的 threads 產生之後 heap manager 會配置次要的 (secondary) arenas 給這些新的 threads，這麼做能夠降低執行緒為了執行像是 malloc, free 這類 heap operations 而等待其他執行緒的機率。
+    
 ### Summary Figure
 Check the figure which summarizes the results through the following link
 
-[Link to Image](https://github.com/sShaAanGg/Linux-OS-projects/blob/main/project1/Virtual_Memory_Layout.drawio.png)
+![Link to Image](https://github.com/sShaAanGg/Linux-OS-projects/blob/main/project1/Virtual_Memory_Layout.drawio.png)
 
 ### References
 > [Thread-Local Storage](https://web.mit.edu/rhel-doc/3/rhel-gcc-en-3/thread-local.html)  
@@ -187,4 +214,5 @@ Check the figure which summarizes the results through the following link
 > [get_pid和get_task_mm](https://zhuanlan.zhihu.com/p/41788388)  
 > [__task_pid_nr_ns和find_get_pid](https://zhuanlan.zhihu.com/p/41260133)  
 > [Memory mapping - The Linux Kernel documentation](https://linux-kernel-labs.github.io/refs/pull/222/merge/labs/memory_mapping.html)  
-> 
+> [Linux kernel 内存 - 页表映射（SHIFT，SIZE，MASK）和转换(32位，64位) - 苏小北1024 - 博客园](https://www.cnblogs.com/muahao/p/10297852.html)  
+> [Linux Kernel - HackMD](https://hackmd.io/@eugenechou/H1LGA9AiB#Project-1)  
