@@ -10,6 +10,9 @@
 #define __NR_get_task_mm 334
 #define __NR_get_phys_addr 335
 
+// char *global_str = "Global variable char *";
+// char *BSS_str;
+
 long get_task_mm_syscall(void)
 {
     return syscall(__NR_get_task_mm);
@@ -27,6 +30,14 @@ void get_phys_addr_syscall(unsigned long virt_addr, unsigned long *addr_ptr)
 
 int main()
 {
+    // // dynamically allocated variable(s) in main
+    // char *heap_str = (char *) malloc(sizeof(char) * 100);
+    // // local variables in main()
+    // char *str = "main";
+    // strncpy(heap_str, str, 5);
+    // unsigned long phys_addr;
+    // unsigned long *addr_ptr = &phys_addr;
+
     pid_t child_pid, w;
     int wait_status;
     
