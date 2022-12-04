@@ -9,70 +9,121 @@ gcc: 5.4.0
 > [fork(2) — Linux manual page](https://man7.org/linux/man-pages/man2/fork.2.html)  
 > [wait(2) — Linux manual page](https://man7.org/linux/man-pages/man2/wait.2.html)  
 
+### Output of `./main` (from `gcc main.c -o main`)
+```
+Parent process PID is 4381
+Child process PID is 4382
+The address of char *str in main [stack]: 0x7ffe4968bab8, pa: 843e9ab8
+The value of char *heap_str in main [heap]: 0x2141010, pa: f996010
+The address of global variable char *global_str [data]: 0x602088, pa: 843e8088
+The address of uninitialized variable char *BSS_str [BSS]: 0x602098, pa: 843e8098
+
+System call returned 0
+The address of char *str in main [stack]: 0x7ffe4968bab8, pa: 87093ab8
+The value of char *heap_str in main [heap]: 0x2141010, pa: ab378010
+The address of global variable char *global_str [data]: 0x602088, pa: 68b2f088
+The address of uninitialized variable char *BSS_str [BSS]: 0x602098, pa: 68b2f098
+
+System call returned 0
+```
 ### Output of `dmesg`
 ```
-[ 9866.295609] start_code of mm_struct is 400000 (pa: 33dc8000)
-[ 9866.295610] end_code of mm_struct is 400b34 (pa: 33dc8b34)
-[ 9866.295611] start_data of mm_struct is 600e10 (pa: c1460e10)
-[ 9866.295611] end_data of mm_struct is 601070 (pa: 8fe49070)
-[ 9866.295612] start_brk of mm_struct is 1f23000 (pa: dc84000)
-[ 9866.295613] brk of mm_struct is 1f44000 (pa: ffffffffffffffff)
+[ 2620.605542] start_code of mm_struct is 400000 (pa: 7fc47000)
+[ 2620.605543] end_code of mm_struct is 400f04 (pa: 7fc47f04)
+[ 2620.605543] start_data of mm_struct is 601e10 (pa: 44c7e10)
+[ 2620.605544] end_data of mm_struct is 602090 (pa: 843e8090)
+[ 2620.605544] start_brk of mm_struct is 2141000 (pa: f996000)
+[ 2620.605545] brk of mm_struct is 2162000 (pa: ffffffffffffffff)
 
-[ 9866.295614] mmap_base of mm_struct is 7f9263cfb000 (pa: ffffffffffffffff)
+[ 2620.605546] mmap_base of mm_struct is 7f932e4a5000 (pa: ffffffffffffffff)
 
-[ 9866.295614] start_stack of mm_struct is 7ffddeaffc60 (pa: 65475c60)
-[ 9866.295615] arg_start of mm_struct is 7ffddeb01e2d
-[ 9866.295615] arg_end of mm_struct is 7ffddeb01e34
-[ 9866.295615] env_start of mm_struct is 7ffddeb01e34
-[ 9866.295616] env_end of mm_struct is 7ffddeb02ff1
+[ 2620.605546] start_stack of mm_struct is 7ffe4968bbd0 (pa: 843e9bd0)
+[ 2620.605547] arg_start of mm_struct is 7ffe4968de36
+[ 2620.605547] arg_end of mm_struct is 7ffe4968de3d
+[ 2620.605547] env_start of mm_struct is 7ffe4968de3d
+[ 2620.605548] env_end of mm_struct is 7ffe4968eff1
 
-<!-- [ 9866.295617] vm_start: 400000 (pa: 33dc8000)    vm_end: 401000    size: 1000
-[ 9866.295617] vm_start: 600000 (pa: c1460000)    vm_end: 601000    size: 1000
-[ 9866.295618] vm_start: 601000 (pa: 8fe49000)    vm_end: 602000    size: 1000
-[ 9866.295619] vm_start: 1f23000 (pa: dc84000)    vm_end: 1f44000    size: 21000
-[ 9866.295620] vm_start: 7f9263709000 (pa: 11fe40000)    vm_end: 7f92638c9000    size: 1c0000
-[ 9866.295621] vm_start: 7f92638c9000 (pa: ffffffffffffffff)    vm_end: 7f9263ac9000    size: 200000
-[ 9866.295621] vm_start: 7f9263ac9000 (pa: 90aa6000)    vm_end: 7f9263acd000    size: 4000
-[ 9866.295622] vm_start: 7f9263acd000 (pa: 6c363000)    vm_end: 7f9263acf000    size: 2000
-[ 9866.295623] vm_start: 7f9263acf000 (pa: c2c58000)    vm_end: 7f9263ad3000    size: 4000
-[ 9866.295623] vm_start: 7f9263ad3000 (pa: 11fd3e000)    vm_end: 7f9263af9000    size: 26000
-[ 9866.295624] vm_start: 7f9263cda000 (pa: 6e0d8000)    vm_end: 7f9263cdd000    size: 3000
-[ 9866.295625] vm_start: 7f9263cf8000 (pa: 90ab5000)    vm_end: 7f9263cf9000    size: 1000
-[ 9866.295625] vm_start: 7f9263cf9000 (pa: 6b740000)    vm_end: 7f9263cfa000    size: 1000
-[ 9866.295626] vm_start: 7f9263cfa000 (pa: c9c59000)    vm_end: 7f9263cfb000    size: 1000
-[ 9866.295627] vm_start: 7ffddeae1000 (pa: ffffffffffffffff)    vm_end: 7ffddeb03000    size: 22000
-[ 9866.295628] vm_start: 7ffddeb07000 (pa: ffffffffffffffff)    vm_end: 7ffddeb0a000    size: 3000
-[ 9866.295628] vm_start: 7ffddeb0a000 (pa: 3f196000)    vm_end: 7ffddeb0c000    size: 2000 -->
-[ 9867.296473] start_code of mm_struct is 400000 (pa: 33dc8000)
-[ 9867.296500] end_code of mm_struct is 400b34 (pa: 33dc8b34)
-[ 9867.296501] start_data of mm_struct is 600e10 (pa: c1460e10)
-[ 9867.296502] end_data of mm_struct is 601070 (pa: 90ab4070)
-[ 9867.296503] start_brk of mm_struct is 1f23000 (pa: 49141000)
-[ 9867.296503] brk of mm_struct is 1f44000 (pa: ffffffffffffffff)
+[ 2620.605548] vm_start: 400000 (pa: 7fc47000)    vm_end: 401000    size: 1000
+[ 2620.605549] vm_start: 601000 (pa: 44c7000)    vm_end: 602000    size: 1000
+[ 2620.605550] vm_start: 602000 (pa: 843e8000)    vm_end: 603000    size: 1000
+[ 2620.605551] vm_start: 2141000 (pa: f996000)    vm_end: 2162000    size: 21000
+[ 2620.605552] vm_start: 7f932deb3000 (pa: 11fe5e000)    vm_end: 7f932e073000    size: 1c0000
+[ 2620.605552] vm_start: 7f932e073000 (pa: ffffffffffffffff)    vm_end: 7f932e273000    size: 200000
+[ 2620.605553] vm_start: 7f932e273000 (pa: d1a24000)    vm_end: 7f932e277000    size: 4000
+[ 2620.605554] vm_start: 7f932e277000 (pa: 843e5000)    vm_end: 7f932e279000    size: 2000
+[ 2620.605555] vm_start: 7f932e279000 (pa: 13e1a000)    vm_end: 7f932e27d000    size: 4000
+[ 2620.605555] vm_start: 7f932e27d000 (pa: 11fcbd000)    vm_end: 7f932e2a3000    size: 26000
+[ 2620.605556] vm_start: 7f932e484000 (pa: 80131000)    vm_end: 7f932e487000    size: 3000
+[ 2620.605557] vm_start: 7f932e4a2000 (pa: 845b000)    vm_end: 7f932e4a3000    size: 1000
+[ 2620.605557] vm_start: 7f932e4a3000 (pa: 843e7000)    vm_end: 7f932e4a4000    size: 1000
+[ 2620.605558] vm_start: 7f932e4a4000 (pa: acfb0000)    vm_end: 7f932e4a5000    size: 1000
+[ 2620.605559] vm_start: 7ffe4966d000 (pa: ffffffffffffffff)    vm_end: 7ffe4968f000    size: 22000
+[ 2620.605559] vm_start: 7ffe4979a000 (pa: ffffffffffffffff)    vm_end: 7ffe4979d000    size: 3000
+[ 2620.605560] vm_start: 7ffe4979d000 (pa: 82996000)    vm_end: 7ffe4979f000    size: 2000
+[ 2621.614646] start_code of mm_struct is 400000 (pa: 7fc47000)
+[ 2621.614648] end_code of mm_struct is 400f04 (pa: 7fc47f04)
+[ 2621.614649] start_data of mm_struct is 601e10 (pa: 44c7e10)
+[ 2621.614649] end_data of mm_struct is 602090 (pa: 68b2f090)
+[ 2621.614650] start_brk of mm_struct is 2141000 (pa: ab378000)
+[ 2621.614650] brk of mm_struct is 2162000 (pa: ffffffffffffffff)
 
-[ 9867.296504] mmap_base of mm_struct is 7f9263cfb000 (pa: ffffffffffffffff)
+[ 2621.614651] mmap_base of mm_struct is 7f932e4a5000 (pa: ffffffffffffffff)
 
-[ 9867.296505] start_stack of mm_struct is 7ffddeaffc60 (pa: dc85c60)
-[ 9867.296505] arg_start of mm_struct is 7ffddeb01e2d
-[ 9867.296506] arg_end of mm_struct is 7ffddeb01e34
-[ 9867.296506] env_start of mm_struct is 7ffddeb01e34
-[ 9867.296506] env_end of mm_struct is 7ffddeb02ff1
+[ 2621.614651] start_stack of mm_struct is 7ffe4968bbd0 (pa: 87093bd0)
+[ 2621.614652] arg_start of mm_struct is 7ffe4968de36
+[ 2621.614652] arg_end of mm_struct is 7ffe4968de3d
+[ 2621.614652] env_start of mm_struct is 7ffe4968de3d
+[ 2621.614653] env_end of mm_struct is 7ffe4968eff1
 
-<!-- [ 9867.296507] vm_start: 400000 (pa: 33dc8000)    vm_end: 401000    size: 1000
-[ 9867.296508] vm_start: 600000 (pa: c1460000)    vm_end: 601000    size: 1000
-[ 9867.296509] vm_start: 601000 (pa: 90ab4000)    vm_end: 602000    size: 1000
-[ 9867.296510] vm_start: 1f23000 (pa: 49141000)    vm_end: 1f44000    size: 21000
-[ 9867.296511] vm_start: 7f9263709000 (pa: 11fe40000)    vm_end: 7f92638c9000    size: 1c0000
-[ 9867.296511] vm_start: 7f92638c9000 (pa: ffffffffffffffff)    vm_end: 7f9263ac9000    size: 200000
-[ 9867.296512] vm_start: 7f9263ac9000 (pa: 90aa6000)    vm_end: 7f9263acd000    size: 4000
-[ 9867.296513] vm_start: 7f9263acd000 (pa: 6d87f000)    vm_end: 7f9263acf000    size: 2000
-[ 9867.296514] vm_start: 7f9263acf000 (pa: 90aa7000)    vm_end: 7f9263ad3000    size: 4000
-[ 9867.296514] vm_start: 7f9263ad3000 (pa: 11fd3e000)    vm_end: 7f9263af9000    size: 26000
-[ 9867.296515] vm_start: 7f9263cda000 (pa: 6e0d8000)    vm_end: 7f9263cdd000    size: 3000
-[ 9867.296516] vm_start: 7f9263cf8000 (pa: 90ab5000)    vm_end: 7f9263cf9000    size: 1000
-[ 9867.296516] vm_start: 7f9263cf9000 (pa: 6d87e000)    vm_end: 7f9263cfa000    size: 1000
-[ 9867.296517] vm_start: 7f9263cfa000 (pa: c9c59000)    vm_end: 7f9263cfb000    size: 1000
-[ 9867.296518] vm_start: 7ffddeae1000 (pa: ffffffffffffffff)    vm_end: 7ffddeb03000    size: 22000
-[ 9867.296519] vm_start: 7ffddeb07000 (pa: ffffffffffffffff)    vm_end: 7ffddeb0a000    size: 3000
-[ 9867.296519] vm_start: 7ffddeb0a000 (pa: ffffffffffffffff)    vm_end: 7ffddeb0c000    size: 2000 -->
+[ 2621.614654] vm_start: 400000 (pa: 7fc47000)    vm_end: 401000    size: 1000
+[ 2621.614654] vm_start: 601000 (pa: 44c7000)    vm_end: 602000    size: 1000
+[ 2621.614655] vm_start: 602000 (pa: 68b2f000)    vm_end: 603000    size: 1000
+[ 2621.614656] vm_start: 2141000 (pa: ab378000)    vm_end: 2162000    size: 21000
+[ 2621.614657] vm_start: 7f932deb3000 (pa: 11fe5e000)    vm_end: 7f932e073000    size: 1c0000
+[ 2621.614657] vm_start: 7f932e073000 (pa: ffffffffffffffff)    vm_end: 7f932e273000    size: 200000
+[ 2621.614658] vm_start: 7f932e273000 (pa: d1a24000)    vm_end: 7f932e277000    size: 4000
+[ 2621.614659] vm_start: 7f932e277000 (pa: 80130000)    vm_end: 7f932e279000    size: 2000
+[ 2621.614660] vm_start: 7f932e279000 (pa: afba2000)    vm_end: 7f932e27d000    size: 4000
+[ 2621.614660] vm_start: 7f932e27d000 (pa: ffffffffffffffff)    vm_end: 7f932e2a3000    size: 26000
+[ 2621.614661] vm_start: 7f932e484000 (pa: 80131000)    vm_end: 7f932e487000    size: 3000
+[ 2621.614662] vm_start: 7f932e4a2000 (pa: 845b000)    vm_end: 7f932e4a3000    size: 1000
+[ 2621.614662] vm_start: 7f932e4a3000 (pa: c8997000)    vm_end: 7f932e4a4000    size: 1000
+[ 2621.614663] vm_start: 7f932e4a4000 (pa: acfb0000)    vm_end: 7f932e4a5000    size: 1000
+[ 2621.614664] vm_start: 7ffe4966d000 (pa: ffffffffffffffff)    vm_end: 7ffe4968f000    size: 22000
+[ 2621.614665] vm_start: 7ffe4979a000 (pa: ffffffffffffffff)    vm_end: 7ffe4979d000    size: 3000
+[ 2621.614665] vm_start: 7ffe4979d000 (pa: ffffffffffffffff)    vm_end: 7ffe4979f000    size: 2000
+```
+由以上輸出加上下方 `gdb` 的輔助可確認: 
+- code segment is shared
+- data segment, BSS segment, heap segment, stack segment are non-shared (separate pages)  
+    The start address of data segment is the same but the end address of it isn't; there are 2 global variables `char *global_str` with the same initialized value with different physical addresses.
+- libc `/lib/x86_64-linux-gnu/libc-2.23.so` is shared, dynamic linker `/lib/x86_64-linux-gnu/ld-2.23.so` is uncertain (seems to be not shared?)
+
+### Output of `info proc` in gdb
+下方為 parent process virtual memory layout, 透過此輸出可知各 libraries 的位置 (順序與 virtual memory area size 皆為固定)
+
+```
+(gdb) info proc mapping
+process 3995
+Mapped address spaces:
+
+          Start Addr           End Addr       Size     Offset objfile
+            0x400000           0x401000     0x1000        0x0 /home/shang/repo/Linux-OS-projects/project2/main
+            0x601000           0x602000     0x1000     0x1000 /home/shang/repo/Linux-OS-projects/project2/main
+            0x602000           0x603000     0x1000     0x2000 /home/shang/repo/Linux-OS-projects/project2/main
+           0x1bdf000          0x1c00000    0x21000        0x0 [heap]
+      0x7f17788f3000     0x7f1778ab3000   0x1c0000        0x0 /lib/x86_64-linux-gnu/libc-2.23.so
+      0x7f1778ab3000     0x7f1778cb3000   0x200000   0x1c0000 /lib/x86_64-linux-gnu/libc-2.23.so
+      0x7f1778cb3000     0x7f1778cb7000     0x4000   0x1c0000 /lib/x86_64-linux-gnu/libc-2.23.so
+      0x7f1778cb7000     0x7f1778cb9000     0x2000   0x1c4000 /lib/x86_64-linux-gnu/libc-2.23.so
+      0x7f1778cb9000     0x7f1778cbd000     0x4000        0x0 
+      0x7f1778cbd000     0x7f1778ce3000    0x26000        0x0 /lib/x86_64-linux-gnu/ld-2.23.so
+      0x7f1778ec4000     0x7f1778ec7000     0x3000        0x0 
+      0x7f1778ee2000     0x7f1778ee3000     0x1000    0x25000 /lib/x86_64-linux-gnu/ld-2.23.so
+      0x7f1778ee3000     0x7f1778ee4000     0x1000    0x26000 /lib/x86_64-linux-gnu/ld-2.23.so
+      0x7f1778ee4000     0x7f1778ee5000     0x1000        0x0 
+      0x7ffe967fb000     0x7ffe9681d000    0x22000        0x0 [stack]
+      0x7ffe968ab000     0x7ffe968ae000     0x3000        0x0 [vvar]
+      0x7ffe968ae000     0x7ffe968b0000     0x2000        0x0 [vdso]
+  0xffffffffff600000 0xffffffffff601000     0x1000        0x0 [vsyscall]
 ```
