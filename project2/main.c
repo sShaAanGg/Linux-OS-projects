@@ -48,11 +48,16 @@ int main()
     }
 
     if (child_pid == 0) {
+        global_str = "Global variable char *";
+        BSS_str = "";
+        str = "main";
+        strncpy(heap_str, str, 5);
+
         printf("Child process PID is %d\n", (int) getpid());
         sleep(2);
         
         char *input;
-        scanf("%s", input); // for gdb analyzing
+        // scanf("%s", input); // for gdb analyzing
         
         get_phys_addr_syscall((unsigned long) &str, addr_ptr);
         printf("The address of char *str in %s [stack]: %p, pa: %lx\n", str, &str, phys_addr);
@@ -62,6 +67,14 @@ int main()
         printf("The address of global variable char *global_str [data]: %p, pa: %lx\n", &global_str, phys_addr);
         get_phys_addr_syscall((unsigned long) &BSS_str, addr_ptr);
         printf("The address of uninitialized variable char *BSS_str [BSS]: %p, pa: %lx\n", &BSS_str, phys_addr);
+        printf("\n");
+
+        get_phys_addr_syscall((unsigned long) main, addr_ptr);
+        printf("The address of function pointer main: %p, pa: %lx\n", main, phys_addr);
+        get_phys_addr_syscall((unsigned long) printf, addr_ptr);
+        printf("The address of function pointer printf: %p, pa: %lx\n", printf, phys_addr);
+        get_phys_addr_syscall((unsigned long) malloc, addr_ptr);
+        printf("The address of function pointer malloc: %p, pa: %lx\n", malloc, phys_addr);
         printf("\n");
 
         long l = get_task_mm_syscall();
@@ -81,6 +94,14 @@ int main()
         printf("The address of global variable char *global_str [data]: %p, pa: %lx\n", &global_str, phys_addr);
         get_phys_addr_syscall((unsigned long) &BSS_str, addr_ptr);
         printf("The address of uninitialized variable char *BSS_str [BSS]: %p, pa: %lx\n", &BSS_str, phys_addr);
+        printf("\n");
+
+        get_phys_addr_syscall((unsigned long) main, addr_ptr);
+        printf("The address of function pointer main: %p, pa: %lx\n", main, phys_addr);
+        get_phys_addr_syscall((unsigned long) printf, addr_ptr);
+        printf("The address of function pointer printf: %p, pa: %lx\n", printf, phys_addr);
+        get_phys_addr_syscall((unsigned long) malloc, addr_ptr);
+        printf("The address of function pointer malloc: %p, pa: %lx\n", malloc, phys_addr);
         printf("\n");
 
         long l = get_task_mm_syscall();

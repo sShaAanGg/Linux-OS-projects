@@ -50,6 +50,14 @@ int main()
     printf("The address of uninitialized variable char *BSS_str [BSS]: %p, pa: %lx\n", &BSS_str, phys_addr);
     printf("\n");
 
+    get_phys_addr_syscall((unsigned long) main, addr_ptr);
+    printf("The address of function pointer main: %p, pa: %lx\n", main, phys_addr);
+    get_phys_addr_syscall((unsigned long) printf, addr_ptr);
+    printf("The address of function pointer printf: %p, pa: %lx\n", printf, phys_addr);
+    get_phys_addr_syscall((unsigned long) malloc, addr_ptr);
+    printf("The address of function pointer malloc: %p, pa: %lx\n", malloc, phys_addr);
+    printf("\n");
+    
     long l = get_task_mm_syscall();
     printf("System call returned %ld\n", l);
 
