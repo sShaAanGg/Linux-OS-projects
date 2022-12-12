@@ -148,7 +148,7 @@ Mapped address spaces:
 ## Implementation 2
 main2.c is another simple implementation without `fork()`. The experiment is conducted by executed the program `main2` simultaneously in shells (calling `sleep(10000);`).  
 [Link to source code](https://github.com/sShaAanGg/Linux-OS-projects/blob/main/project2/main2.c)
-### Output 1 of `./main2` (from `gcc -g main2.c -o main`)
+### Output 1 of `./main2` (from `gcc -g main2.c -o main2`)
 ```
 The address of char *str in main [stack]: 0x7ffe0d284dc0, pa: 4afaadc0
 The value of char *heap_str in main [heap]: 0x2520010, pa: 4db26010
@@ -162,7 +162,7 @@ The address of function pointer malloc: 0x400660, pa: 1ad8f660
 System call returned 0
 ```
 
-### Output 2 of `./main2` (from `gcc -g main2.c -o main`)
+### Output 2 of `./main2` (from `gcc -g main2.c -o main2`)
 ```
 The address of char *str in main [stack]: 0x7ffe3a986c20, pa: c0e70c20
 The value of char *heap_str in main [heap]: 0x20fb010, pa: 63879010
