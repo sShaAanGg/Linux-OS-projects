@@ -112,7 +112,7 @@ System call returned 0
     **By implementation 2 (main2) we know that data segment is not shared.** Above result may come from copy-on-write mechanism of `fork()` in linux.
     > [fork(2) — Linux manual page](https://man7.org/linux/man-pages/man2/fork.2.html)
 - libc `/lib/x86_64-linux-gnu/libc-2.23.so` is shared, dynamic linker `/lib/x86_64-linux-gnu/ld-2.23.so` is uncertain (seems to be shared?)  
-  **By implementation 2 (main2) we know that at least the first virtual memory area starts at the same page frame** and the code of libc like `printf()` and `malloc()` is shared.
+  **By implementation 2 (main2) we know that at least the first virtual memory area starts at the same page frame**.
 
 To sum up, only code segment and libraies are shared; others are not shared.
 
@@ -245,6 +245,6 @@ System call returned 0
 ```
 
 - The result is almost the same as `main`. The different part is the physical address of **start_data** is different. Therefore, data segment is not shared.
-- libc `/lib/x86_64-linux-gnu/libc-2.23.so` and dynamic linker `/lib/x86_64-linux-gnu/ld-2.23.so` are shared (at least the first virtual memory area starts at the same page frame and the code of libc like `printf()` and `malloc()` is shared).
+- libc `/lib/x86_64-linux-gnu/libc-2.23.so` and dynamic linker `/lib/x86_64-linux-gnu/ld-2.23.so` are shared (at least the first virtual memory area starts at the same page frame).
 
 To sum up, only code segment and libraies are shared; others are not shared.
